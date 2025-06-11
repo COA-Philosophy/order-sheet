@@ -749,19 +749,19 @@ optgroup option {
     }
 }
 
-/* 印刷対応 - A4 1枚に収める超コンパクト版 */
+/* 印刷対応 - A4 1枚 4セクション形式 */
 @media print {
     /* A4サイズ設定 */
     @page {
         size: A4;
-        margin: 3mm; /* さらに余白を削減 */
+        margin: 5mm;
     }
     
     body { 
         margin: 0; 
         background: white;
-        font-size: 6pt; /* さらに小さく */
-        line-height: 1.1;
+        font-size: 8pt;
+        line-height: 1.2;
     }
     
     .container { 
@@ -770,296 +770,29 @@ optgroup option {
         max-width: none;
         padding: 0;
         width: 100%;
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 3mm;
+        height: 287mm;
     }
     
-    /* ヘッダーを1行に */
+    /* ヘッダー */
     .header {
-        margin-bottom: 3px;
-        padding-bottom: 2px;
-        border-bottom: 1px solid #000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        grid-row: 1;
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 2mm;
+        margin-bottom: 0;
     }
     
     .header h1 {
-        font-size: 10pt;
+        font-size: 14pt;
         margin: 0;
     }
     
     .header p {
-        font-size: 6pt;
-        margin: 0;
-    }
-    
-    /* セクションタイトルを最小化 */
-    .section {
-        margin-bottom: 3px;
-        page-break-inside: avoid;
-        border: 0.5px solid #666;
-    }
-    
-    .section-title {
-        font-size: 7pt;
-        padding: 1px 3px;
-        background: #e0e0e0 !important;
-        color: #000 !important;
-        margin: 0;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    
-    .section-content {
-        padding: 2px 3px;
-    }
-    
-    /* 必須情報と任意情報を統合 */
-    .essential-info,
-    .section:nth-of-type(2) {
-        border: none;
-        margin: 0;
-        padding: 0;
-    }
-    
-    .essential-info .section-title,
-    .section:nth-of-type(2) .section-title {
-        display: none;
-    }
-    
-    /* 顧客情報を超コンパクトグリッドに */
-    .customer-info-grid {
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 2px !important;
-        margin-bottom: 3px !important;
-    }
-    
-    .essential-info .section-content,
-    .section:nth-of-type(2) .section-content {
-        display: contents;
-    }
-    
-    .essential-group {
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: contents !important;
-    }
-    
-    .essential-header {
-        display: none !important;
-    }
-    
-    /* フォームグループを最小化 */
-    .form-group {
-        margin-bottom: 0 !important;
-        padding: 1px !important;
-    }
-    
-    .form-group label {
-        font-size: 5pt !important;
-        margin: 0 !important;
-        font-weight: normal !important;
-        display: inline !important;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        border: none !important;
-        border-bottom: 0.5px solid #999 !important;
-        padding: 0 !important;
-        font-size: 6pt !important;
-        background: none !important;
-        height: 10px !important;
-        width: 100% !important;
-    }
-    
-    /* 名前とフリガナを2列に */
-    .name-inputs,
-    .name-kana {
-        display: contents !important;
-    }
-    
-    /* 生年月日を1つのフィールドに */
-    .birth-date-inputs {
-        display: none !important;
-    }
-    
-    #birthDate {
-        display: block !important;
-        height: 10px !important;
-    }
-    
-    /* 住所セクションをコンパクトに */
-    .address-inputs {
-        display: contents !important;
-    }
-    
-    .postal-row {
-        display: none !important;
-    }
-    
-    /* 採寸情報を8列グリッドに */
-    .section:nth-of-type(3) .section-content {
-        display: grid !important;
-        grid-template-columns: repeat(8, 1fr) !important;
-        gap: 1px !important;
-    }
-    
-    .measurement-grid {
-        display: contents !important;
-    }
-    
-    .measurement-grid .form-group {
-        font-size: 5pt !important;
-    }
-    
-    /* 採寸セクションのタイトルを非表示 */
-    .section-content h4 {
-        display: none !important;
-    }
-    
-    /* 体型の特徴は非表示 */
-    textarea[name="bodyType"] {
-        display: none !important;
-    }
-    
-    /* スタイル・仕様を超コンパクトに */
-    .style-item {
-        border: 0.5px solid #666 !important;
-        padding: 1px !important;
-        margin-bottom: 1px !important;
-    }
-    
-    .style-item .form-row {
-        display: grid !important;
-        grid-template-columns: repeat(6, 1fr) !important;
-        gap: 1px !important;
-    }
-    
-    .item-header,
-    .item-count {
-        display: none !important;
-    }
-    
-    /* チェックボックスを1行に完全に並べる */
-    .style-item .form-group:has(.checkbox-group) {
-        grid-column: 1 / -1 !important; /* 全幅使用 */
-    }
-    
-    .checkbox-group {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        gap: 3px !important;
-        font-size: 5pt !important;
-    }
-    
-    .checkbox-group label {
-        display: none !important; /* ラベルを非表示 */
-    }
-    
-    .checkbox-item {
-        white-space: nowrap !important;
-        font-size: 5pt !important;
-    }
-    
-    .checkbox-item label {
-        display: inline !important;
-        font-size: 5pt !important;
-    }
-    
-    .checkbox-item input[type="checkbox"] {
-        width: 6px !important;
-        height: 6px !important;
-        margin-right: 1px !important;
-    }
-    
-    /* 価格セクションを1行に */
-    .total-section {
-        border: 0.5px solid #000 !important;
-        padding: 2px !important;
-        margin-top: 2px !important;
-    }
-    
-    .total-section h4,
-    #priceBreakdown,
-    .total-section > div {
-        display: none !important;
-    }
-    
-    .total-row {
-        display: inline !important;
-        margin-right: 8px !important;
-        font-size: 6pt !important;
-    }
-    
-    .total-row.grand-total {
-        display: inline !important;
-        font-size: 7pt !important;
-        font-weight: bold !important;
-        border: none !important;
-        padding: 0 !important;
-        margin-left: 5px !important;
-    }
-    
-    /* 支払い・納期を1行に */
-    #payment-section .section-content {
-        display: flex !important;
-        gap: 5px !important;
-    }
-    
-    #payment-section .form-row {
-        display: contents !important;
-    }
-    
-    #payment-section .form-group {
-        flex: 1 !important;
-    }
-    
-    /* 備考・署名を最小化 */
-    .section:last-of-type .section-content {
-        display: flex !important;
-        gap: 5px !important;
-    }
-    
-    .notes-area {
-        height: 15px !important;
-        font-size: 5pt !important;
-        flex: 1 !important;
-    }
-    
-    /* 署名欄を小さく */
-    .signature-section {
-        margin: 0 !important;
-        display: flex !important;
-        gap: 5px !important;
-        flex: 1 !important;
-    }
-    
-    .signature-section > div {
-        flex: 1 !important;
-    }
-    
-    .signature-section p {
-        display: none !important;
-    }
-    
-    .signature-box {
-        width: auto !important;
-        height: 20px !important;
-        border: 0.5px solid #000 !important;
-        text-align: center !important;
-        padding-top: 10px !important;
-        font-size: 5pt !important;
-    }
-    
-    /* 値が入力されている場合 */
-    input:not(:placeholder-shown),
-    select:not([value=""]),
-    textarea:not(:placeholder-shown) {
-        border-bottom: none !important;
-        font-weight: bold !important;
+        font-size: 8pt;
+        margin: 2px 0 0 0;
     }
     
     /* 非表示要素 */
@@ -1076,21 +809,185 @@ optgroup option {
     .input-guide,
     .step-number,
     .check-mark,
+    .essential-header,
+    .item-header,
+    .item-count,
+    .section-content h4,
+    .signature-section p,
     br {
         display: none !important;
     }
     
-    /* 改ページ絶対禁止 */
+    /* セクション1: 顧客情報 */
+    .print-customer-section {
+        grid-row: 2;
+        display: block !important;
+        border: 1px solid #000;
+        padding: 2mm;
+    }
+    
+    .print-customer-section h3 {
+        font-size: 10pt;
+        margin: 0 0 2mm 0;
+        padding: 1mm;
+        background: #f0f0f0;
+        text-align: center;
+    }
+    
+    .customer-info-table {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1mm;
+        font-size: 7pt;
+    }
+    
+    .info-cell {
+        display: flex;
+        border-bottom: 0.5px solid #ccc;
+        padding: 0.5mm;
+    }
+    
+    .info-cell label {
+        font-weight: bold;
+        margin-right: 2mm;
+        min-width: 30mm;
+    }
+    
+    .info-cell span {
+        flex: 1;
+    }
+    
+    /* セクション2: 採寸項目 */
+    .print-measurement-section {
+        grid-row: 3;
+        display: block !important;
+        border: 1px solid #000;
+        padding: 2mm;
+        overflow: hidden;
+    }
+    
+    .print-measurement-section h3 {
+        font-size: 10pt;
+        margin: 0 0 2mm 0;
+        padding: 1mm;
+        background: #f0f0f0;
+        text-align: center;
+    }
+    
+    .measurement-table {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.5mm;
+        font-size: 6pt;
+    }
+    
+    .measure-cell {
+        display: flex;
+        align-items: center;
+        padding: 0.5mm;
+        border-bottom: 0.5px solid #ddd;
+    }
+    
+    .measure-cell label {
+        font-size: 6pt;
+        margin-right: 1mm;
+    }
+    
+    .measure-cell span {
+        font-weight: bold;
+    }
+    
+    /* セクション3: アイテム詳細・金額 */
+    .print-item-price-section {
+        grid-row: 4;
+        display: block !important;
+        border: 1px solid #000;
+        padding: 2mm;
+    }
+    
+    .item-price-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        margin-bottom: 2mm;
+    }
+    
+    .item-price-header h3 {
+        font-size: 10pt;
+        margin: 0;
+        padding: 1mm;
+        background: #f0f0f0;
+    }
+    
+    .price-summary {
+        font-size: 10pt;
+        font-weight: bold;
+        padding: 1mm 3mm;
+        background: #333;
+        color: white;
+    }
+    
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 7pt;
+        margin-bottom: 2mm;
+    }
+    
+    .items-table th,
+    .items-table td {
+        border: 0.5px solid #ccc;
+        padding: 1mm;
+        text-align: left;
+    }
+    
+    .items-table th {
+        background: #f5f5f5;
+        font-weight: bold;
+    }
+    
+    .payment-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2mm;
+        padding-top: 2mm;
+        border-top: 1px solid #ccc;
+    }
+    
+    .payment-cell {
+        font-size: 8pt;
+    }
+    
+    /* 既存セクションを非表示 */
+    .section {
+        display: none !important;
+    }
+    
+    /* 署名欄（最下部） */
+    .print-signature {
+        position: absolute;
+        bottom: 5mm;
+        left: 5mm;
+        right: 5mm;
+        display: flex !important;
+        justify-content: space-between;
+        gap: 5mm;
+    }
+    
+    .signature-box {
+        flex: 1;
+        height: 15mm;
+        border: 1px solid #000;
+        text-align: center;
+        padding-top: 10mm;
+        font-size: 8pt;
+    }
+    
+    /* 改ページ防止 */
     * {
         page-break-inside: avoid !important;
         page-break-before: avoid !important;
         page-break-after: avoid !important;
-    }
-    
-    /* 全体の高さ制限 */
-    .container {
-        max-height: 287mm !important; /* A4の高さ - マージン */
-        overflow: hidden !important;
     }
 }
 
@@ -1851,7 +1748,7 @@ select {
             <button type="button" class="download-btn" onclick="saveToCSV()">📊 CSV保存（データ管理用）</button>
             
             <!-- 印刷・PDF出力 -->
-            <button type="button" class="print-preview-btn" onclick="printPreview()">🖨️ A4印刷・PDF出力</button>
+            <button type="button" class="print-preview-btn download-btn" onclick="printPreview()">🖨️ A4印刷・PDF出力</button>
             
             <!-- バックアップ用 -->
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
@@ -3020,7 +2917,7 @@ function saveToCSV() {
                     const str = String(v || '');
                     
                     // 電話番号の場合は先頭に'を付けてExcelで文字列として認識させる
-                    if (row === values && headers[row.indexOf(v)] === '電話番号' && str !== '') {
+                    if (headers[row.indexOf(v)] === '電話番号' && str !== '') {
                         return `"'${str}"`;
                     }
                     
@@ -3090,710 +2987,3 @@ function loadBackupData() {
     if (isInSandbox()) {
         showStatusMessage('⚠️ この環境ではバックアップ機能が利用できません', 'info');
         return;
-    }
-    
-    try {
-        const backupData = localStorage.getItem('orderSheetBackup');
-        const backupDate = localStorage.getItem('orderSheetBackupDate');
-        
-        if (!backupData) {
-            showStatusMessage('バックアップデータが見つかりません', 'info');
-            return;
-        }
-        
-        const data = JSON.parse(backupData);
-        const date = new Date(backupDate);
-        const dateStr = date.toLocaleString('ja-JP');
-        
-        if (confirm(`${dateStr} のバックアップデータを読み込みますか？\n現在の入力内容は上書きされます。`)) {
-            loadDataToForm(data);
-            showStatusMessage(`✅ バックアップデータを読み込みました（${dateStr}）`, 'success');
-        }
-        
-    } catch (error) {
-        console.error('バックアップ読み込みエラー:', error);
-        showStatusMessage('❌ バックアップの読み込みに失敗しました', 'error');
-    }
-}
-
-// 自動バックアップ機能（5分ごと）
-function setupAutoBackup() {
-    if (isInSandbox()) {
-        console.log('サンドボックス環境では自動バックアップは利用できません');
-        return;
-    }
-    
-    setInterval(() => {
-        const lastName = document.getElementById('lastName')?.value;
-        const firstName = document.getElementById('firstName')?.value;
-        
-        // 名前が入力されている場合
-        if (lastName || firstName) {
-            try {
-                if (currentCustomerId) {
-                    // 既存顧客の場合は上書き保存
-                    autoSaveCurrentCustomer();
-                } else {
-                    // 新規の場合は一時バックアップ
-                    const formData = collectFormData();
-                    localStorage.setItem('orderSheetBackup', JSON.stringify(formData));
-                    localStorage.setItem('orderSheetBackupDate', new Date().toISOString());
-                }
-                console.log('自動バックアップ完了:', new Date().toLocaleString());
-            } catch (e) {
-                console.log('自動バックアップエラー:', e);
-            }
-        }
-    }, 5 * 60 * 1000); // 5分ごと
-}
-
-function loadDataToForm(data) {
-    try {
-        // フォームを一旦クリア（確認なし）
-        clearFormWithoutConfirm();
-        
-        // 基本情報
-        if (data.orderNumber) {
-            const orderNumberElement = document.getElementById('orderNumber');
-            if (orderNumberElement) {
-                orderNumberElement.textContent = data.orderNumber;
-            }
-        }
-        
-        if (data.lastName) document.getElementById('lastName').value = data.lastName;
-        if (data.firstName) document.getElementById('firstName').value = data.firstName;
-        if (data.lastNameKana) document.getElementById('lastNameKana').value = data.lastNameKana;
-        if (data.firstNameKana) document.getElementById('firstNameKana').value = data.firstNameKana;
-        if (data.phone) document.getElementById('phone').value = data.phone;
-        if (data.email) document.getElementById('email').value = data.email;
-        if (data.lineId) document.getElementById('lineId').value = data.lineId;
-        if (data.referrer) document.getElementById('referrer').value = data.referrer;
-        if (data.gender) document.getElementById('gender').value = data.gender;
-        if (data.occupation) document.getElementById('occupation').value = data.occupation;
-        
-        // 生年月日
-        if (data.birthDate) {
-            const birthParts = data.birthDate.split('-');
-            if (birthParts.length === 3) {
-                const birthYear = document.getElementById('birthYear');
-                const birthMonth = document.getElementById('birthMonth');
-                const birthDay = document.getElementById('birthDay');
-                
-                if (birthYear) birthYear.value = birthParts[0];
-                if (birthMonth) birthMonth.value = parseInt(birthParts[1]);
-                
-                // 日の選択肢を更新してから値を設定
-                updateDays();
-                setTimeout(() => {
-                    if (birthDay) birthDay.value = parseInt(birthParts[2]);
-                }, 100);
-            }
-        }
-        
-        // 住所
-        if (data.postalCode) document.getElementById('postalCode').value = data.postalCode;
-        if (data.prefecture) document.getElementById('prefecture').value = data.prefecture;
-        if (data.address) document.getElementById('address').value = data.address;
-        
-        // 採寸情報
-        if (data.measurements) {
-            Object.keys(data.measurements).forEach(key => {
-                const element = document.getElementById(key);
-                if (element && data.measurements[key]) {
-                    element.value = data.measurements[key];
-                }
-            });
-        }
-        
-        // アイテム情報
-        if (data.items && data.items.length > 0) {
-            const container = document.getElementById('styleItemsContainer');
-            if (container) {
-                // 既存のアイテムをクリア
-                container.innerHTML = '';
-                itemCounter = 0;
-                nextItemId = 1;
-                
-                // 保存されたアイテムを復元
-                data.items.forEach((item, index) => {
-                    addStyleItem();
-                    
-                    // アイテムのデータを設定
-                    const itemId = nextItemId - 1;
-                    
-                    if (item.itemType) {
-                        const itemTypeElement = document.getElementById(`itemType_${itemId}`);
-                        if (itemTypeElement) itemTypeElement.value = item.itemType;
-                    }
-                    if (item.fabric) {
-                        const fabricElement = document.getElementById(`fabric_${itemId}`);
-                        if (fabricElement) fabricElement.value = item.fabric;
-                    }
-                    if (item.color) {
-                        const colorElement = document.getElementById(`color_${itemId}`);
-                        if (colorElement) colorElement.value = item.color;
-                    }
-                    if (item.jacketStyle) {
-                        const jacketStyleElement = document.getElementById(`jacketStyle_${itemId}`);
-                        if (jacketStyleElement) jacketStyleElement.value = item.jacketStyle;
-                    }
-                    if (item.lining) {
-                        const liningElement = document.getElementById(`lining_${itemId}`);
-                        if (liningElement) liningElement.value = item.lining;
-                    }
-                    if (item.buttons) {
-                        const buttonsElement = document.getElementById(`buttons_${itemId}`);
-                        if (buttonsElement) buttonsElement.value = item.buttons;
-                    }
-                    if (item.lapelStyle) {
-                        const lapelElement = document.getElementById(`lapelStyle_${itemId}`);
-                        if (lapelElement) lapelElement.value = item.lapelStyle;
-                    }
-                    if (item.cuffStyle) {
-                        const cuffElement = document.getElementById(`cuffStyle_${itemId}`);
-                        if (cuffElement) cuffElement.value = item.cuffStyle;
-                    }
-                    if (item.cuffDetails) {
-                        const cuffDetailsElement = document.getElementById(`cuffDetails_${itemId}`);
-                        if (cuffDetailsElement) cuffDetailsElement.value = item.cuffDetails;
-                    }
-                    if (item.price) {
-                        const priceElement = document.getElementById(`price_${itemId}`);
-                        if (priceElement) priceElement.value = item.price;
-                    }
-                    if (item.deliveryDate) {
-                        const deliveryDateElement = document.getElementById(`deliveryDate_${itemId}`);
-                        if (deliveryDateElement) deliveryDateElement.value = item.deliveryDate;
-                    }
-                    if (item.notes) {
-                        const notesElement = document.getElementById(`notes_${itemId}`);
-                        if (notesElement) notesElement.value = item.notes;
-                    }
-                    
-                    // オプション（チェックボックス）
-                    if (item.options && Array.isArray(item.options)) {
-                        item.options.forEach(option => {
-                            const checkboxes = document.querySelectorAll(`[data-item="${itemId}"] input[type="checkbox"]`);
-                            checkboxes.forEach(checkbox => {
-                                const label = checkbox.nextElementSibling;
-                                if (label && label.textContent === option) {
-                                    checkbox.checked = true;
-                                }
-                            });
-                        });
-                    }
-                });
-            }
-        }
-        
-        // 支払い情報
-        if (data.payment) {
-            if (data.payment.method) document.getElementById('paymentMethod').value = data.payment.method;
-            if (data.payment.deposit) document.getElementById('deposit').value = data.payment.deposit;
-            if (data.payment.balance) document.getElementById('balance').value = data.payment.balance;
-            if (data.payment.orderDate) document.getElementById('orderDate').value = data.payment.orderDate;
-            if (data.payment.fittingDate) document.getElementById('fittingDate').value = data.payment.fittingDate;
-            if (data.payment.completionDate) document.getElementById('completionDate').value = data.payment.completionDate;
-            if (data.payment.discountPercent) document.getElementById('discountPercent').value = data.payment.discountPercent;
-            if (data.payment.discountAmount) document.getElementById('discountAmount').value = data.payment.discountAmount;
-        }
-        
-        // 備考
-        if (data.generalNotes) document.getElementById('generalNotes').value = data.generalNotes;
-        
-        updateTotalPrice();
-        checkEssentialFields();
-        
-    } catch (error) {
-        console.error('データ読み込みエラー:', error);
-        showStatusMessage('❌ データの読み込み中にエラーが発生しました', 'error');
-    }
-}
-
-// 確認なしでフォームをクリアする関数
-function clearFormWithoutConfirm() {
-    // すべての入力フィールドをクリア
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], textarea');
-    inputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('valid', 'invalid');
-    });
-    
-    // セレクトボックスをリセット
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-        select.selectedIndex = 0;
-    });
-    
-    // チェックボックスをクリア
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = false;
-    });
-    
-    // 生年月日の隠しフィールドもクリア
-    const birthDateField = document.getElementById('birthDate');
-    if (birthDateField) {
-        birthDateField.value = '';
-    }
-}
-
-// =============================================================================
-// スタイルアイテム管理機能
-// =============================================================================
-
-function addStyleItem() {
-    const container = document.getElementById('styleItemsContainer');
-    if (!container) return;
-    
-    const itemId = nextItemId;
-    
-    const itemHTML = `
-        <div class="style-item adding" data-item="${itemId}">
-            <div class="item-header">
-                <h5>アイテム ${itemId}</h5>
-                <button type="button" class="remove-item-btn" onclick="removeStyleItem(${itemId})">削除</button>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="itemType_${itemId}">アイテムタイプ</label>
-                    <select id="itemType_${itemId}" name="itemType_${itemId}">
-                        <option value="">選択してください</option>
-                        <option value="Suit(2P)">Suit(2P)</option>
-                        <option value="Suit(3P)">Suit(3P)</option>
-                        <option value="Suit+Pants">Suit+Pants</option>
-                        <option value="Suit(3P)+Pants">Suit(3P)+Pants</option>
-                        <option value="Jacket(S)">Jacket(S)</option>
-                        <option value="Jacket(D)">Jacket(D)</option>
-                        <option value="Vest">Vest</option>
-                        <option value="Pants">Pants</option>
-                        <option value="D Suit">D Suit</option>
-                        <option value="D Suit(3P)">D Suit(3P)</option>
-                        <option value="D Suit+Pants">D Suit+Pants</option>
-                        <option value="D Suit(3P)+Pants">D Suit(3P)+Pants</option>
-                        <option value="Shirts">Shirts</option>
-                        <option value="Tie">Tie</option>
-                        <option value="Repair">Repair</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="fabric_${itemId}">生地</label>
-                    <input type="text" id="fabric_${itemId}" name="fabric_${itemId}" placeholder="生地番号・名称">
-                </div>
-                <div class="form-group">
-                    <label for="color_${itemId}">色</label>
-                    <input type="text" id="color_${itemId}" name="color_${itemId}">
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="jacketStyle_${itemId}">ジャケットスタイル</label>
-                    <select id="jacketStyle_${itemId}" name="jacketStyle_${itemId}">
-                        <option value="">選択してください</option>
-                        <option value="single">シングル</option>
-                        <option value="double">ダブル</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="lining_${itemId}">裏地</label>
-                    <input type="text" id="lining_${itemId}" name="lining_${itemId}" placeholder="裏地の種類・色">
-                </div>
-                <div class="form-group">
-                    <label for="buttons_${itemId}">ボタン</label>
-                    <input type="text" id="buttons_${itemId}" name="buttons_${itemId}" placeholder="ボタンの種類・材質">
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="lapelStyle_${itemId}">衿型（ラペル・カラー）</label>
-                    <select id="lapelStyle_${itemId}" name="lapelStyle_${itemId}">
-                        <option value="">選択してください</option>
-                        <optgroup label="ジャケット・スーツ">
-                            <option value="notched">ノッチドラペル（一般的）</option>
-                            <option value="peaked">ピークドラペル（剣先）</option>
-                            <option value="shawl">ショールカラー</option>
-                            <option value="narrow">ナローラペル</option>
-                            <option value="wide">ワイドラペル</option>
-                        </optgroup>
-                        <optgroup label="シャツカラー">
-                            <option value="regular_collar">レギュラーカラー</option>
-                            <option value="semi_wide_collar">セミワイドカラー</option>
-                            <option value="wide_collar">ワイドカラー</option>
-                            <option value="horizontal_wide_collar">ホリゾンタルワイドカラー</option>
-                            <option value="round_collar">ラウンドカラー</option>
-                            <option value="open_collar">オープンカラー</option>
-                            <option value="stand_collar">スタンドカラー</option>
-                            <option value="wing_collar">ウィングカラー</option>
-                            <option value="short_regular_collar">ショートレギュラーカラー</option>
-                            <option value="short_semi_wide_collar">ショートセミワイドカラー</option>
-                            <option value="short_wide_collar">ショートワイドカラー</option>
-                            <option value="short_horizontal_wide_collar">ショートホリゾンタルワイドカラー</option>
-                            <option value="short_round_collar">ショートラウンドカラー</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cuffStyle_${itemId}">カフス（袖口）</label>
-                    <select id="cuffStyle_${itemId}" name="cuffStyle_${itemId}">
-                        <option value="">選択してください</option>
-                        <optgroup label="ジャケット・スーツ">
-                            <option value="4button">4つボタン本切羽</option>
-                            <option value="3button">3つボタン本切羽</option>
-                            <option value="4button_fake">4つボタン（飾り）</option>
-                            <option value="3button_fake">3つボタン（飾り）</option>
-                            <option value="surgeons">サージャンカフス</option>
-                            <option value="kissing">キッシングボタン</option>
-                        </optgroup>
-                        <optgroup label="シャツカフス">
-                            <option value="regular_no_opening">レギュラー（開きなし）</option>
-                            <option value="small_round">小丸</option>
-                            <option value="round_b">ラウンドB</option>
-                            <option value="round_c">ラウンドC</option>
-                            <option value="cut_corner">角落ち</option>
-                            <option value="corn">コーン</option>
-                            <option value="turn_up">ターンナップ</option>
-                            <option value="double_cuff">ダブル</option>
-                            <option value="arrow">アロー</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cuffDetails_${itemId}">カフス詳細</label>
-                    <input type="text" id="cuffDetails_${itemId}" name="cuffDetails_${itemId}" placeholder="ボタンホール色、ステッチ等">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>オプション</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="ticket_pocket_${itemId}" name="options_${itemId}">
-                        <label for="ticket_pocket_${itemId}">チケットポケット</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="amf_stitch_${itemId}" name="options_${itemId}">
-                        <label for="amf_stitch_${itemId}">AMFステッチ</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="functional_sleeves_${itemId}" name="options_${itemId}">
-                        <label for="functional_sleeves_${itemId}">本切羽</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="side_vents_${itemId}" name="options_${itemId}">
-                        <label for="side_vents_${itemId}">サイドベンツ</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="suspender_buttons_${itemId}" name="options_${itemId}">
-                        <label for="suspender_buttons_${itemId}">サスペンダーボタン</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="center_vent_${itemId}" name="options_${itemId}">
-                        <label for="center_vent_${itemId}">センターベンツ</label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="price_${itemId}">価格（円）</label>
-                    <input type="number" id="price_${itemId}" name="price_${itemId}" step="1000" onchange="updateTotalPrice()">
-                </div>
-                <div class="form-group">
-                    <label for="deliveryDate_${itemId}">納期</label>
-                    <input type="date" id="deliveryDate_${itemId}" name="deliveryDate_${itemId}">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes_${itemId}">備考</label>
-                <textarea id="notes_${itemId}" name="notes_${itemId}" rows="2" placeholder="特別な要望や注意事項"></textarea>
-            </div>
-        </div>
-    `;
-    
-    container.insertAdjacentHTML('beforeend', itemHTML);
-    itemCounter++;
-    nextItemId++;
-    
-    setTimeout(() => {
-        const newItem = container.querySelector(`[data-item="${itemId}"]`);
-        if (newItem) {
-            newItem.classList.remove('adding');
-        }
-    }, 300);
-    
-    updateItemCount();
-    updateRemoveButtons();
-}
-
-function removeStyleItem(itemId) {
-    const item = document.querySelector(`[data-item="${itemId}"]`);
-    if (item && itemCounter > 1) {
-        item.classList.add('removing');
-        
-        setTimeout(() => {
-            item.remove();
-            itemCounter--;
-            updateItemCount();
-            updateRemoveButtons();
-            updateTotalPrice();
-        }, 300);
-    }
-}
-
-function updateItemCount() {
-    const itemCountElement = document.getElementById('itemCount');
-    if (itemCountElement) {
-        itemCountElement.textContent = itemCounter;
-    }
-}
-
-function updateRemoveButtons() {
-    const removeButtons = document.querySelectorAll('.remove-item-btn');
-    removeButtons.forEach(button => {
-        if (itemCounter <= 1) {
-            button.style.display = 'none';
-        } else {
-            button.style.display = 'inline-block';
-        }
-    });
-}
-
-// =============================================================================
-// 価格計算機能
-// =============================================================================
-
-function updateTotalPrice() {
-    let total = 0;
-    const breakdown = document.getElementById('priceBreakdown');
-    if (breakdown) {
-        breakdown.innerHTML = '';
-    }
-
-    const items = document.querySelectorAll('.style-item');
-    items.forEach((item, index) => {
-        const itemId = item.getAttribute('data-item');
-        const priceInput = document.getElementById(`price_${itemId}`);
-        const itemTypeSelect = document.getElementById(`itemType_${itemId}`);
-        
-        if (priceInput && priceInput.value) {
-            const price = parseInt(priceInput.value) || 0;
-            const itemType = itemTypeSelect ? itemTypeSelect.value || `アイテム ${itemId}` : `アイテム ${itemId}`;
-            
-            total += price;
-            
-            if (breakdown) {
-                const row = document.createElement('div');
-                row.className = 'total-row';
-                row.innerHTML = `
-                    <span>${itemType}</span>
-                    <span>¥${price.toLocaleString()}</span>
-                `;
-                breakdown.appendChild(row);
-            }
-        }
-    });
-
-    const grandTotalElement = document.getElementById('grandTotal');
-    if (grandTotalElement) {
-        grandTotalElement.textContent = `¥${total.toLocaleString()}`;
-    }
-    
-    // ディスカウントを適用して最終価格を計算
-    updateFinalPrice();
-}
-
-// ディスカウントの更新
-function updateDiscount(type) {
-    const grandTotalElement = document.getElementById('grandTotal');
-    const totalText = grandTotalElement ? grandTotalElement.textContent : '¥0';
-    const subtotal = parseInt(totalText.replace(/[¥,]/g, '')) || 0;
-    
-    const discountPercentInput = document.getElementById('discountPercent');
-    const discountAmountInput = document.getElementById('discountAmount');
-    
-    if (type === 'percent') {
-        // パーセント入力時
-        const percent = parseFloat(discountPercentInput?.value) || 0;
-        const discountAmount = Math.floor(subtotal * percent / 100);
-        
-        if (discountAmountInput) {
-            discountAmountInput.value = discountAmount || '';
-        }
-    } else if (type === 'amount') {
-        // 金額入力時
-        const amount = parseInt(discountAmountInput?.value) || 0;
-        const percent = subtotal > 0 ? (amount / subtotal * 100).toFixed(1) : 0;
-        
-        if (discountPercentInput) {
-            discountPercentInput.value = percent || '';
-        }
-    }
-    
-    updateFinalPrice();
-}
-
-// 最終価格と残金を計算
-function updateFinalPrice() {
-    // 小計を取得
-    const grandTotalElement = document.getElementById('grandTotal');
-    const totalText = grandTotalElement ? grandTotalElement.textContent : '¥0';
-    const subtotal = parseInt(totalText.replace(/[¥,]/g, '')) || 0;
-    
-    // 割引額を取得
-    const discountAmountInput = document.getElementById('discountAmount');
-    const discountAmount = parseInt(discountAmountInput?.value) || 0;
-    
-    // 最終価格を計算
-    const finalTotal = subtotal - discountAmount;
-    
-    // 割引額表示を更新
-    const discountDisplay = document.getElementById('discountDisplay');
-    if (discountDisplay) {
-        discountDisplay.textContent = discountAmount > 0 ? `-¥${discountAmount.toLocaleString()}` : '-¥0';
-    }
-    
-    // 最終価格を表示
-    const finalTotalElement = document.getElementById('finalTotal');
-    if (finalTotalElement) {
-        finalTotalElement.textContent = `¥${(finalTotal >= 0 ? finalTotal : 0).toLocaleString()}`;
-    }
-    
-    // 残金も更新
-    updateBalance();
-}
-
-// 残金を自動計算
-function updateBalance() {
-    // 最終価格を取得
-    const finalTotalElement = document.getElementById('finalTotal');
-    const finalText = finalTotalElement ? finalTotalElement.textContent : '¥0';
-    const finalTotal = parseInt(finalText.replace(/[¥,]/g, '')) || 0;
-    
-    // 内金を取得
-    const depositInput = document.getElementById('deposit');
-    const deposit = parseInt(depositInput?.value) || 0;
-    
-    // 残金を計算
-    const balance = finalTotal - deposit;
-    
-    // 残金フィールドに設定
-    const balanceInput = document.getElementById('balance');
-    if (balanceInput) {
-        balanceInput.value = balance >= 0 ? balance : 0;
-        
-        // 残金がマイナスの場合は警告
-        if (balance < 0) {
-            showStatusMessage('⚠️ 内金が最終価格を超えています', 'info');
-        }
-    }
-    
-    // 総計セクションの表示も更新
-    const depositDisplay = document.getElementById('depositDisplay');
-    const balanceDisplay = document.getElementById('balanceDisplay');
-    
-    if (depositDisplay) {
-        depositDisplay.textContent = `¥${deposit.toLocaleString()}`;
-    }
-    
-    if (balanceDisplay) {
-        balanceDisplay.textContent = `¥${(balance >= 0 ? balance : 0).toLocaleString()}`;
-    }
-}
-
-// =============================================================================
-// イベントリスナーとエラーハンドリング
-// =============================================================================
-
-window.addEventListener('online', function() {
-    showStatusMessage('🌐 ネットワーク接続が復旧しました', 'success');
-});
-
-window.addEventListener('offline', function() {
-    showStatusMessage('📱 オフラインモードです。ローカル保存をご利用ください', 'info');
-});
-
-window.addEventListener('beforeunload', function(e) {
-    const lastName = document.getElementById('lastName')?.value;
-    const firstName = document.getElementById('firstName')?.value;
-    
-    if (lastName || firstName) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-});
-
-// =============================================================================
-// 印刷・PDF機能
-// =============================================================================
-
-// 印刷プレビュー
-function printPreview() {
-    // 印刷前に必須項目をチェック
-    const lastName = document.getElementById('lastName')?.value.trim();
-    const firstName = document.getElementById('firstName')?.value.trim();
-    
-    if (!lastName || !firstName) {
-        showStatusMessage('❌ お客様のお名前を入力してください', 'error');
-        return;
-    }
-    
-    // 印刷用に顧客情報をグリッド化
-    const container = document.querySelector('.container');
-    if (container) {
-        // 必須情報と任意情報を一時的に統合
-        const essentialInfo = document.querySelector('.essential-info .section-content');
-        const additionalInfo = document.querySelector('.section:nth-of-type(2) .section-content');
-        
-        if (essentialInfo && additionalInfo) {
-            // 顧客情報グリッドを作成
-            const customerGrid = document.createElement('div');
-            customerGrid.className = 'customer-info-grid';
-            customerGrid.style.cssText = 'display: none;'; // 画面では非表示
-            
-            // すべてのform-groupを収集
-            const allFormGroups = [
-                ...essentialInfo.querySelectorAll('.form-group'),
-                ...additionalInfo.querySelectorAll('.form-group')
-            ];
-            
-            allFormGroups.forEach(group => {
-                customerGrid.appendChild(group.cloneNode(true));
-            });
-            
-            container.insertBefore(customerGrid, container.firstChild);
-        }
-    }
-    
-    showStatusMessage('印刷プレビューを開いています...', 'info');
-    
-    // 少し遅延を入れて印刷ダイアログを開く
-    setTimeout(() => {
-        window.print();
-        
-        // 印刷後に追加した要素を削除
-        const customerGrid = document.querySelector('.customer-info-grid');
-        if (customerGrid) {
-            customerGrid.remove();
-        }
-    }, 500);
-}
-
-// =============================================================================
-// デバッグとログ出力
-// =============================================================================
-
-console.log('=== CRMオーダーシステム V5 完全版 ===');
-console.log('初期化完了時刻:', new Date().toISOString());
-console.log('利用可能機能:');
-console.log('- 自動バックアップ（5分ごと）');
-console.log('- PDF/Excel/CSV保存');
-console.log('- オフライン対応');
-console.log('- データ保護機能');
-console.log('========================');
-    </script>
-</body>
-</html>
