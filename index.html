@@ -1496,6 +1496,9 @@ select {
                 <button type="button" class="download-btn" style="background: linear-gradient(135deg, #4caf50, #388e3c); width: 100%;" onclick="saveAsNewCustomer()">
                     ➕ 現在の入力を新規顧客として保存
                 </button>
+                <button type="button" class="download-btn" style="background: linear-gradient(135deg, #ff9800, #f57c00); width: 100%; margin-top: 10px;" onclick="updateCurrentCustomer()">
+                    💾 現在の顧客データを上書き保存
+                </button>
             </div>
             
             <!-- データ保存ボタン -->
@@ -2195,6 +2198,58 @@ function collectFormData() {
     return formData;
 }
 
+// 現在の顧客データを上書き保存
+function updateCurrentCustomer() {
+    if (!currentCustomerId) {
+        showStatusMessage('❌ 顧客が選択されていません。新規保存してください。', 'error');
+        return;
+    }
+    
+    if (isInSandbox()) {
+        showStatusMessage('⚠️ この環境では上書き保存機能が利用できません', 'info');
+        return;
+    }
+    
+    try {
+        const formData = collectFormData();
+        
+        // 現在の顧客データを上書き
+        localStorage.setItem(`customer_${currentCustomerId}`, JSON.stringify(formData));
+        
+        // 顧客リストの基本情報も更新
+        const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
+        if (customers[currentCustomerId]) {
+            customers[currentCustomerId].lastName = formData.lastName;
+            customers[currentCustomerId].firstName = formData.firstName;
+            customers[currentCustomerId].savedDate = new Date().toISOString();
+            localStorage.setItem('customerList', JSON.stringify(customers));
+        }
+        
+        // リストを更新
+        loadCustomerList();
+        
+        showStatusMessage(`✅ ${formData.lastName} ${formData.firstName}様のデータを更新しました`, 'success');
+        
+    } catch (error) {
+        console.error('顧客更新エラー:', error);
+        showStatusMessage('❌ 顧客データの更新に失敗しました', 'error');
+    }
+}
+
+// デバッグ用：ローカルストレージの内容を確認
+function debugStorage() {
+    console.log('=== LocalStorage Debug ===');
+    console.log('顧客リスト:', localStorage.getItem('customerList'));
+    
+    const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
+    Object.keys(customers).forEach(customerId => {
+        console.log(`顧客ID: ${customerId}`);
+        console.log(`リスト情報:`, customers[customerId]);
+        console.log(`詳細データ:`, localStorage.getItem(`customer_${customerId}`));
+    });
+    console.log('========================');
+}
+
 // =============================================================================
 // 複数顧客管理機能
 // =============================================================================
@@ -2208,16 +2263,40 @@ function loadCustomerList() {
         const selectElement = document.getElementById('customerSelect');
         
         if (selectElement) {
+            // 現在の選択値を保存
+            const currentValue = selectElement.value;
+            
             selectElement.innerHTML = '<option value="">顧客を選択...</option>';
             
-            Object.keys(customers).forEach(customerId => {
-                const customer = customers[customerId];
+            // 顧客リストをソート（新しい順）
+            const sortedCustomers = Object.entries(customers).sort((a, b) => {
+                const dateA = new Date(a[1].savedDate || 0);
+                const dateB = new Date(b[1].savedDate || 0);
+                return dateB - dateA;
+            });
+            
+            sortedCustomers.forEach(([customerId, customer]) => {
                 const option = document.createElement('option');
                 option.value = customerId;
-                option.textContent = `${customer.lastName} ${customer.firstName} (${customer.orderNumber})`;
+                const savedDate = customer.savedDate ? new Date(customer.savedDate).toLocaleDateString('ja-JP') : '';
+                option.textContent = `${customer.lastName} ${customer.firstName} (${savedDate})`;
                 selectElement.appendChild(option);
             });
+            
+            // 選択値を復元
+            if (currentValue) {
+                selectElement.value = currentValue;
+            }
         }
+        
+        // デバッグ用
+        console.log('顧客リスト:', customers);
+        console.log('保存されている顧客データ:');
+        Object.keys(customers).forEach(id => {
+            const data = localStorage.getItem(`customer_${id}`);
+            console.log(`customer_${id}:`, data ? 'データあり' : 'データなし');
+        });
+        
     } catch (e) {
         console.error('顧客リスト読み込みエラー:', e);
     }
@@ -2239,35 +2318,39 @@ function saveAsNewCustomer() {
     }
     
     try {
+        // フォームデータを収集
         const formData = collectFormData();
         
-        // 新しい顧客IDを生成（既存のIDと重複しないように）
+        // 新しい顧客IDを生成（タイムスタンプベース）
         const now = new Date();
-        const customerId = 'CUS' + now.getFullYear() + 
-                          String(now.getMonth() + 1).padStart(2, '0') + 
-                          String(now.getDate()).padStart(2, '0') + 
-                          String(now.getHours()).padStart(2, '0') +
-                          String(now.getMinutes()).padStart(2, '0') +
-                          String(now.getSeconds()).padStart(2, '0') +
-                          String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+        const customerId = 'CUS' + now.getTime() + '_' + Math.floor(Math.random() * 1000);
         
         // 顧客リストを取得
         const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
         
-        // 新規顧客を追加
+        // 顧客リストに基本情報を追加
         customers[customerId] = {
             customerId: customerId,
             lastName: formData.lastName,
             firstName: formData.firstName,
             orderNumber: formData.orderNumber,
-            savedDate: new Date().toISOString()
+            savedDate: now.toISOString()
         };
         
-        // 保存
+        // 顧客リストを保存
         localStorage.setItem('customerList', JSON.stringify(customers));
+        
+        // 詳細データを個別に保存
         localStorage.setItem(`customer_${customerId}`, JSON.stringify(formData));
         
+        // 現在の顧客IDを更新
         currentCustomerId = customerId;
+        
+        // デバッグ用ログ
+        console.log('保存した顧客ID:', customerId);
+        console.log('保存したデータ:', formData);
+        const savedData = localStorage.getItem(`customer_${customerId}`);
+        console.log('確認 - 保存されたデータ:', savedData ? 'OK' : 'NG');
         
         // リストを更新
         loadCustomerList();
@@ -2303,20 +2386,33 @@ function loadCustomerData() {
     
     try {
         const customerData = localStorage.getItem(`customer_${customerId}`);
-        if (customerData) {
-            const data = JSON.parse(customerData);
-            
-            // 現在のデータがある場合は確認
-            const lastName = document.getElementById('lastName')?.value;
-            const firstName = document.getElementById('firstName')?.value;
-            
-            if ((lastName || firstName) && 
-                confirm('現在の入力内容は失われます。続行しますか？')) {
-                loadDataToForm(data);
-                currentCustomerId = customerId;
-                showStatusMessage(`✅ ${data.lastName} ${data.firstName}様のデータを読み込みました`, 'success');
+        if (!customerData) {
+            showStatusMessage('❌ 顧客データが見つかりません', 'error');
+            return;
+        }
+        
+        const data = JSON.parse(customerData);
+        
+        // 現在のデータがある場合は確認
+        const lastName = document.getElementById('lastName')?.value;
+        const firstName = document.getElementById('firstName')?.value;
+        
+        if (lastName || firstName) {
+            if (!confirm('現在の入力内容は失われます。続行しますか？')) {
+                return;
             }
         }
+        
+        // データを読み込む
+        loadDataToForm(data);
+        currentCustomerId = customerId;
+        
+        // デバッグ用ログ
+        console.log('読み込んだデータ:', data);
+        console.log('現在の顧客ID:', currentCustomerId);
+        
+        showStatusMessage(`✅ ${data.lastName} ${data.firstName}様のデータを読み込みました`, 'success');
+        
     } catch (error) {
         console.error('顧客データ読み込みエラー:', error);
         showStatusMessage('❌ 顧客データの読み込みに失敗しました', 'error');
