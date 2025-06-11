@@ -611,6 +611,68 @@ optgroup option {
     animation: checkmark 0.5s ease;
 }
 
+/* フォーカス時のハイライト */
+.form-group.focused {
+    background: #f0f8ff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* モバイル用次へボタン */
+.mobile-next-btn {
+    display: none;
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .mobile-next-btn {
+        display: block;
+    }
+}
+
+.mobile-next-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(52, 152, 219, 0.4);
+}
+
+/* モバイルでのinput要素の改善 */
+@media (max-width: 768px) {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* iOS Safari のズーム防止 */
+        padding: 12px;
+    }
+    
+    .large-input input,
+    .large-input select {
+        font-size: 18px;
+        padding: 15px;
+    }
+    
+    /* タップターゲットを大きく */
+    .checkbox-item {
+        padding: 10px 0;
+    }
+    
+    .checkbox-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+    }
+}
+
 /* モバイル対応 */
 @media (max-width: 768px) {
     body {
@@ -819,21 +881,21 @@ select {
                     <div class="name-inputs">
                         <div class="form-group large-input">
                             <label for="lastName">姓</label>
-                            <input type="text" id="lastName" name="lastName" placeholder="山田" required autocomplete="family-name">
+                            <input type="text" id="lastName" name="lastName" placeholder="山田" required autocomplete="family-name" enterkeyhint="next">
                         </div>
                         <div class="form-group large-input">
                             <label for="firstName">名</label>
-                            <input type="text" id="firstName" name="firstName" placeholder="太郎" required autocomplete="given-name">
+                            <input type="text" id="firstName" name="firstName" placeholder="太郎" required autocomplete="given-name" enterkeyhint="next">
                         </div>
                     </div>
                     <div class="name-kana">
                         <div class="form-group">
                             <label for="lastNameKana">フリガナ（セイ）</label>
-                            <input type="text" id="lastNameKana" name="lastNameKana" placeholder="ヤマダ" autocomplete="family-name">
+                            <input type="text" id="lastNameKana" name="lastNameKana" placeholder="ヤマダ" autocomplete="family-name" enterkeyhint="next">
                         </div>
                         <div class="form-group">
                             <label for="firstNameKana">フリガナ（メイ）</label>
-                            <input type="text" id="firstNameKana" name="firstNameKana" placeholder="タロウ" autocomplete="given-name">
+                            <input type="text" id="firstNameKana" name="firstNameKana" placeholder="タロウ" autocomplete="given-name" enterkeyhint="next">
                         </div>
                     </div>
                 </div>
@@ -847,7 +909,7 @@ select {
                     </div>
                     <div class="form-group large-input">
                         <label for="phone">携帯電話または固定電話</label>
-                        <input type="tel" id="phone" name="phone" placeholder="090-1234-5678" required autocomplete="tel">
+                        <input type="tel" id="phone" name="phone" placeholder="090-1234-5678" required autocomplete="tel" enterkeyhint="next" inputmode="tel">
                         <div class="input-hint">ハイフン（-）ありでも、なしでもOKです</div>
                     </div>
                 </div>
@@ -905,7 +967,7 @@ select {
                         <div class="postal-row">
                             <div class="form-group">
                                 <label for="postalCode">郵便番号</label>
-                                <input type="text" id="postalCode" name="postalCode" placeholder="123-4567" autocomplete="postal-code">
+                                <input type="text" id="postalCode" name="postalCode" placeholder="123-4567" autocomplete="postal-code" enterkeyhint="next" inputmode="numeric">
                             </div>
                             <button type="button" class="address-lookup-btn" onclick="lookupAddress()">住所検索</button>
                         </div>
@@ -964,7 +1026,7 @@ select {
                         </div>
                         <div class="form-group large-input">
                             <label for="address">市区町村・番地・建物名</label>
-                            <input type="text" id="address" name="address" placeholder="渋谷区恵比寿1-2-3 恵比寿ビル101号" required autocomplete="address-line1">
+                            <input type="text" id="address" name="address" placeholder="渋谷区恵比寿1-2-3 恵比寿ビル101号" required autocomplete="address-line1" enterkeyhint="done">
                         </div>
                     </div>
                 </div>
@@ -1480,6 +1542,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBirthDateDropdowns();
     setupRealTimeValidation();
     setupKanaAutoGeneration();
+    setupMobileNavigation(); // モバイルナビゲーション追加
     
     // 基本機能の初期化
     updateItemCount();
@@ -1531,6 +1594,122 @@ function showStatusMessage(message, type = 'info') {
     } else {
         alert(`${type.toUpperCase()}: ${message}`);
     }
+}
+
+// =============================================================================
+// モバイルナビゲーション機能
+// =============================================================================
+
+function setupMobileNavigation() {
+    // 全ての入力フィールドを取得（表示されているもののみ）
+    const getVisibleInputs = () => {
+        const allInputs = document.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]), select, textarea');
+        return Array.from(allInputs).filter(input => {
+            const rect = input.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0 && !input.disabled;
+        });
+    };
+
+    // エンターキーで次のフィールドに移動
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            const activeElement = document.activeElement;
+            
+            // textareaの場合は改行を許可
+            if (activeElement.tagName === 'TEXTAREA') {
+                return;
+            }
+            
+            // submitボタンの場合は何もしない
+            if (activeElement.type === 'submit' || activeElement.type === 'button') {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            const inputs = getVisibleInputs();
+            const currentIndex = inputs.indexOf(activeElement);
+            
+            if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                const nextInput = inputs[currentIndex + 1];
+                nextInput.focus();
+                
+                // スマホの場合、フィールドを画面中央に表示
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        nextInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
+        }
+        
+        // Shift+Enterで前のフィールドに戻る
+        if (e.key === 'Enter' && e.shiftKey) {
+            e.preventDefault();
+            
+            const inputs = getVisibleInputs();
+            const currentIndex = inputs.indexOf(document.activeElement);
+            
+            if (currentIndex > 0) {
+                const prevInput = inputs[currentIndex - 1];
+                prevInput.focus();
+                
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        prevInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
+        }
+    });
+
+    // タッチデバイス用の「次へ」ボタンを追加（オプション）
+    if ('ontouchstart' in window) {
+        addMobileNavigationButtons();
+    }
+    
+    // フォーカス時にラベルをハイライト
+    document.addEventListener('focusin', function(e) {
+        if (e.target.matches('input, select, textarea')) {
+            const formGroup = e.target.closest('.form-group');
+            if (formGroup) {
+                formGroup.classList.add('focused');
+            }
+        }
+    });
+    
+    document.addEventListener('focusout', function(e) {
+        if (e.target.matches('input, select, textarea')) {
+            const formGroup = e.target.closest('.form-group');
+            if (formGroup) {
+                formGroup.classList.remove('focused');
+            }
+        }
+    });
+}
+
+// モバイル用ナビゲーションボタンを追加
+function addMobileNavigationButtons() {
+    // 必須項目セクションに「次へ」ボタンを追加
+    const essentialGroups = document.querySelectorAll('.essential-group');
+    
+    essentialGroups.forEach((group, index) => {
+        if (index < essentialGroups.length - 1) {
+            const nextButton = document.createElement('button');
+            nextButton.type = 'button';
+            nextButton.className = 'mobile-next-btn';
+            nextButton.innerHTML = '次の項目へ →';
+            nextButton.onclick = function() {
+                const nextGroup = essentialGroups[index + 1];
+                const firstInput = nextGroup.querySelector('input, select');
+                if (firstInput) {
+                    firstInput.focus();
+                    nextGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            };
+            group.appendChild(nextButton);
+        }
+    });
 }
 
 // =============================================================================
