@@ -1,24 +1,4 @@
-// アイテム情報
-                index + 1, // アイテムNo
-                item.itemType || '',
-                item.fabric || '',
-                item.color || '',
-                item.jacketStyle === 'single_2x1' ? 'シングル２×１' : 
-                item.jacketStyle === 'single_1x1' ? 'シングル１×１' : 
-                item.jacketStyle === 'single_3x1' ? 'シングル３×１' : 
-                item.jacketStyle === 'double_6x2' ? 'ダブル６×２' : 
-                item.jacketStyle === 'double_4x2' ? 'ダブル４×２' : 
-                item.jacketStyle === 'double_2x1' ? 'ダブル２×１' : item.jacketStyle || '',
-                item.lining || '',
-                item.buttons || '',
-                // 胸ポケット
-                item.chestPocket === 'barca' ? 'バルカポケット' :
-                item.chestPocket === 'box' ? '箱ポケット' :
-                item.chestPocket === 'out' ? 'アウトポケット' : item.chestPocket || '',
-                // 腰ポケット
-                item.waistPocket === 'flap' ? 'フラップポケット' :
-                item.waistPocket === 'out' ? 'アウトポケット' :
-                item.waistPocket<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -972,78 +952,45 @@ optgroup option {
         margin-right: 1px !important;
     }
     
-    /* 価格セクションを独立して見やすく */
+    /* 価格セクションを超コンパクトに */
     .total-section {
-        border: 1px solid #000 !important;
-        padding: 5px !important;
-        margin-top: 5px !important;
-        background: #f0f0f0 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        border: 0.5px solid #000 !important;
+        padding: 2px !important;
+        margin-top: 2px !important;
     }
     
     .total-section h4 {
-        display: block !important;
-        font-size: 8pt !important;
-        margin-bottom: 3px !important;
-        text-align: center !important;
+        display: none !important;
     }
     
     #priceBreakdown {
-        display: block !important;
-        margin-bottom: 3px !important;
+        display: none !important; /* 明細を非表示 */
     }
     
-    #priceBreakdown .total-row {
-        display: block !important;
-        font-size: 7pt !important;
-        margin-bottom: 1px !important;
+    .total-row {
+        display: inline !important;
+        margin-right: 5px !important;
+        font-size: 6pt !important;
     }
     
-    /* 小計を表示 */
-    .total-row.grand-total:first-of-type {
-        display: block !important;
+    .total-row span:first-child::after {
+        content: ":" !important;
+    }
+    
+    .total-row.grand-total {
         font-size: 8pt !important;
-        border-bottom: 1px solid #000 !important;
-        margin-bottom: 3px !important;
-        padding-bottom: 2px !important;
-    }
-    
-    /* ディスカウント部分 */
-    .total-section > div[style*="background: #fff3cd"] {
-        display: block !important;
-        background: none !important;
-        padding: 2px 0 !important;
-        margin: 3px 0 !important;
-        font-size: 7pt !important;
-    }
-    
-    /* 最終価格を強調 */
-    .total-row.grand-total[style*="font-size: 22px"] {
-        display: block !important;
-        font-size: 10pt !important;
-        text-align: center !important;
-        margin: 5px 0 !important;
-        padding: 3px !important;
-        border: 1px solid #000 !important;
-        background: white !important;
         font-weight: bold !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-left: 5px !important;
     }
     
-    /* 内金・残金 */
-    .total-section > div[style*="margin-top: 15px"] {
-        display: block !important;
-        margin-top: 3px !important;
-        padding-top: 3px !important;
-        border-top: 1px solid #666 !important;
-    }
-    
-    .total-section .total-row[style*="color: #666"],
-    .total-section .total-row[style*="color: #e74c3c"] {
-        display: inline-block !important;
-        width: 48% !important;
-        font-size: 7pt !important;
-        margin: 0 !important;
+    /* ディスカウント部分を1行に */
+    .total-section > div[style*="background: #fff3cd"] {
+        display: inline !important;
+        background: none !important;
+        padding: 0 !important;
+        margin: 0 5px !important;
     }
     
     /* 支払い・納期セクションを1行に */
