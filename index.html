@@ -749,19 +749,19 @@ optgroup option {
     }
 }
 
-/* 印刷対応 - A4 1枚に収める */
+/* 印刷対応 - A4 1枚に収める超コンパクト版 */
 @media print {
     /* A4サイズ設定 */
     @page {
         size: A4;
-        margin: 5mm; /* 余白を最小に */
+        margin: 3mm; /* さらに余白を削減 */
     }
     
     body { 
         margin: 0; 
         background: white;
-        font-size: 7pt; /* さらに小さく */
-        line-height: 1.2;
+        font-size: 6pt; /* さらに小さく */
+        line-height: 1.1;
     }
     
     .container { 
@@ -772,34 +772,37 @@ optgroup option {
         width: 100%;
     }
     
-    /* ヘッダーを極小に */
+    /* ヘッダーを1行に */
     .header {
-        margin-bottom: 5px;
-        padding-bottom: 3px;
+        margin-bottom: 3px;
+        padding-bottom: 2px;
         border-bottom: 1px solid #000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
     .header h1 {
-        font-size: 12pt;
+        font-size: 10pt;
         margin: 0;
     }
     
     .header p {
-        font-size: 7pt;
+        font-size: 6pt;
         margin: 0;
     }
     
-    /* セクションを超コンパクトに */
+    /* セクションタイトルを最小化 */
     .section {
-        margin-bottom: 5px;
+        margin-bottom: 3px;
         page-break-inside: avoid;
-        border: 0.5px solid #999;
+        border: 0.5px solid #666;
     }
     
     .section-title {
-        font-size: 8pt;
-        padding: 2px 5px;
-        background: #f0f0f0 !important;
+        font-size: 7pt;
+        padding: 1px 3px;
+        background: #e0e0e0 !important;
         color: #000 !important;
         margin: 0;
         -webkit-print-color-adjust: exact;
@@ -807,206 +810,256 @@ optgroup option {
     }
     
     .section-content {
-        padding: 3px 5px;
+        padding: 2px 3px;
     }
     
-    /* 必須情報セクションを4列に */
-    .essential-info .section-content {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3px;
-    }
-    
-    .essential-group {
+    /* 必須情報と任意情報を統合 */
+    .essential-info,
+    .section:nth-of-type(2) {
         border: none;
-        padding: 2px;
         margin: 0;
+        padding: 0;
     }
     
-    .essential-header {
-        display: none; /* ヘッダーを非表示 */
-    }
-    
-    /* 名前とフリガナを1行に */
-    .name-inputs,
-    .name-kana {
-        display: flex;
-        gap: 5px;
-    }
-    
-    .name-inputs .form-group,
-    .name-kana .form-group {
-        flex: 1;
-    }
-    
-    /* 生年月日を1行に */
-    .birth-date-inputs {
-        display: flex;
-        gap: 3px;
-    }
-    
-    /* 住所を1行に */
-    .address-inputs {
-        display: grid;
-        grid-template-columns: 100px 1fr;
-        gap: 5px;
-    }
-    
-    .postal-row {
-        display: flex;
-        gap: 5px;
-    }
-    
-    /* 採寸情報を6列グリッドに */
-    .measurement-grid {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 2px;
-        font-size: 6pt;
-    }
-    
-    /* 採寸セクションのタイトルを非表示 */
-    .section-content h4 {
+    .essential-info .section-title,
+    .section:nth-of-type(2) .section-title {
         display: none;
     }
     
-    /* フォーム要素を超コンパクトに */
+    /* 顧客情報を超コンパクトグリッドに */
+    .customer-info-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 2px !important;
+        margin-bottom: 3px !important;
+    }
+    
+    .essential-info .section-content,
+    .section:nth-of-type(2) .section-content {
+        display: contents;
+    }
+    
+    .essential-group {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: contents !important;
+    }
+    
+    .essential-header {
+        display: none !important;
+    }
+    
+    /* フォームグループを最小化 */
     .form-group {
-        margin-bottom: 1px;
+        margin-bottom: 0 !important;
+        padding: 1px !important;
     }
     
     .form-group label {
-        font-size: 6pt;
-        margin: 0;
-        font-weight: normal;
+        font-size: 5pt !important;
+        margin: 0 !important;
+        font-weight: normal !important;
+        display: inline !important;
     }
     
     .form-group input,
     .form-group select,
     .form-group textarea {
-        border: none;
-        border-bottom: 0.5px solid #999;
-        padding: 0;
-        font-size: 7pt;
-        background: none;
-        height: 12px;
+        border: none !important;
+        border-bottom: 0.5px solid #999 !important;
+        padding: 0 !important;
+        font-size: 6pt !important;
+        background: none !important;
+        height: 10px !important;
+        width: 100% !important;
     }
     
-    /* textareaも1行に */
-    textarea {
-        resize: none;
-        height: 12px !important;
-        overflow: hidden;
+    /* 名前とフリガナを2列に */
+    .name-inputs,
+    .name-kana {
+        display: contents !important;
     }
     
-    /* 値が入力されている場合 */
-    .form-group input:not(:placeholder-shown),
-    .form-group select:not([value=""]),
-    .form-group textarea:not(:placeholder-shown) {
-        border-bottom: none;
-        font-weight: bold;
+    /* 生年月日を1つのフィールドに */
+    .birth-date-inputs {
+        display: none !important;
     }
     
-    /* スタイル・仕様を横並びに */
+    #birthDate {
+        display: block !important;
+        height: 10px !important;
+    }
+    
+    /* 住所セクションをコンパクトに */
+    .address-inputs {
+        display: contents !important;
+    }
+    
+    .postal-row {
+        display: none !important;
+    }
+    
+    /* 採寸情報を8列グリッドに */
+    .section:nth-of-type(3) .section-content {
+        display: grid !important;
+        grid-template-columns: repeat(8, 1fr) !important;
+        gap: 1px !important;
+    }
+    
+    .measurement-grid {
+        display: contents !important;
+    }
+    
+    .measurement-grid .form-group {
+        font-size: 5pt !important;
+    }
+    
+    /* 採寸セクションのタイトルを非表示 */
+    .section-content h4 {
+        display: none !important;
+    }
+    
+    /* 体型の特徴は非表示 */
+    textarea[name="bodyType"] {
+        display: none !important;
+    }
+    
+    /* スタイル・仕様を超コンパクトに */
     .style-item {
-        border: 0.5px solid #666;
-        padding: 2px;
-        margin-bottom: 2px;
-        background: white;
+        border: 0.5px solid #666 !important;
+        padding: 1px !important;
+        margin-bottom: 1px !important;
     }
     
     .style-item .form-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 3px;
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 1px !important;
     }
     
-    .item-header {
-        display: none; /* アイテムヘッダーを非表示 */
+    .item-header,
+    .item-count {
+        display: none !important;
     }
     
-    /* チェックボックスを1行に */
+    /* チェックボックスを1行に完全に並べる */
+    .style-item .form-group:has(.checkbox-group) {
+        grid-column: 1 / -1 !important; /* 全幅使用 */
+    }
+    
     .checkbox-group {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
-        font-size: 6pt;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 3px !important;
+        font-size: 5pt !important;
+    }
+    
+    .checkbox-group label {
+        display: none !important; /* ラベルを非表示 */
     }
     
     .checkbox-item {
-        white-space: nowrap;
+        white-space: nowrap !important;
+        font-size: 5pt !important;
+    }
+    
+    .checkbox-item label {
+        display: inline !important;
+        font-size: 5pt !important;
     }
     
     .checkbox-item input[type="checkbox"] {
-        width: 8px;
-        height: 8px;
-        margin-right: 2px;
+        width: 6px !important;
+        height: 6px !important;
+        margin-right: 1px !important;
     }
     
-    /* 価格セクションをインラインに */
+    /* 価格セクションを1行に */
     .total-section {
-        border: 1px solid #000;
-        padding: 3px;
-        margin-top: 3px;
+        border: 0.5px solid #000 !important;
+        padding: 2px !important;
+        margin-top: 2px !important;
     }
     
-    .total-section h4 {
-        display: none;
-    }
-    
-    #priceBreakdown {
-        display: none; /* 明細を非表示 */
+    .total-section h4,
+    #priceBreakdown,
+    .total-section > div {
+        display: none !important;
     }
     
     .total-row {
-        display: inline;
-        margin-right: 10px;
-        font-size: 7pt;
-    }
-    
-    .total-row span:first-child::after {
-        content: ":";
+        display: inline !important;
+        margin-right: 8px !important;
+        font-size: 6pt !important;
     }
     
     .total-row.grand-total {
-        font-size: 9pt;
-        font-weight: bold;
-        border: none;
-        padding: 0;
-        margin-left: 10px;
+        display: inline !important;
+        font-size: 7pt !important;
+        font-weight: bold !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-left: 5px !important;
     }
     
-    /* 支払い・納期セクションを1行に */
+    /* 支払い・納期を1行に */
+    #payment-section .section-content {
+        display: flex !important;
+        gap: 5px !important;
+    }
+    
     #payment-section .form-row {
-        display: flex;
-        gap: 10px;
+        display: contents !important;
     }
     
     #payment-section .form-group {
-        flex: 1;
+        flex: 1 !important;
+    }
+    
+    /* 備考・署名を最小化 */
+    .section:last-of-type .section-content {
+        display: flex !important;
+        gap: 5px !important;
+    }
+    
+    .notes-area {
+        height: 15px !important;
+        font-size: 5pt !important;
+        flex: 1 !important;
     }
     
     /* 署名欄を小さく */
     .signature-section {
-        margin-top: 5px;
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
+        margin: 0 !important;
+        display: flex !important;
+        gap: 5px !important;
+        flex: 1 !important;
+    }
+    
+    .signature-section > div {
+        flex: 1 !important;
+    }
+    
+    .signature-section p {
+        display: none !important;
     }
     
     .signature-box {
-        width: 48%;
-        height: 30px;
-        border: 0.5px solid #000;
-        text-align: center;
-        padding-top: 20px;
-        font-size: 6pt;
+        width: auto !important;
+        height: 20px !important;
+        border: 0.5px solid #000 !important;
+        text-align: center !important;
+        padding-top: 10px !important;
+        font-size: 5pt !important;
     }
     
-    /* 備考欄を最小に */
-    .notes-area {
-        height: 20px !important;
-        font-size: 6pt;
+    /* 値が入力されている場合 */
+    input:not(:placeholder-shown),
+    select:not([value=""]),
+    textarea:not(:placeholder-shown) {
+        border-bottom: none !important;
+        font-weight: bold !important;
     }
     
     /* 非表示要素 */
@@ -1021,34 +1074,23 @@ optgroup option {
     .address-lookup-btn,
     .input-hint,
     .input-guide,
-    .item-count,
     .step-number,
-    .check-mark {
+    .check-mark,
+    br {
         display: none !important;
     }
     
-    /* ディスカウントセクションを非表示 */
-    .total-section > div[style*="background: #fff3cd"] {
-        display: none !important;
-    }
-    
-    /* 任意情報セクションを横並びに */
-    .section:nth-of-type(2) .form-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-    }
-    
-    /* 長いラベルを短縮 */
-    label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    
-    /* 改ページ禁止 */
+    /* 改ページ絶対禁止 */
     * {
         page-break-inside: avoid !important;
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+    }
+    
+    /* 全体の高さ制限 */
+    .container {
+        max-height: 287mm !important; /* A4の高さ - マージン */
+        overflow: hidden !important;
     }
 }
 
@@ -3699,21 +3741,32 @@ function printPreview() {
         return;
     }
     
-    // 空の入力欄にプレースホルダーを設定（印刷時の見栄えのため）
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="email"]');
-    inputs.forEach(input => {
-        if (!input.value && !input.placeholder) {
-            input.placeholder = '―';
+    // 印刷用に顧客情報をグリッド化
+    const container = document.querySelector('.container');
+    if (container) {
+        // 必須情報と任意情報を一時的に統合
+        const essentialInfo = document.querySelector('.essential-info .section-content');
+        const additionalInfo = document.querySelector('.section:nth-of-type(2) .section-content');
+        
+        if (essentialInfo && additionalInfo) {
+            // 顧客情報グリッドを作成
+            const customerGrid = document.createElement('div');
+            customerGrid.className = 'customer-info-grid';
+            customerGrid.style.cssText = 'display: none;'; // 画面では非表示
+            
+            // すべてのform-groupを収集
+            const allFormGroups = [
+                ...essentialInfo.querySelectorAll('.form-group'),
+                ...additionalInfo.querySelectorAll('.form-group')
+            ];
+            
+            allFormGroups.forEach(group => {
+                customerGrid.appendChild(group.cloneNode(true));
+            });
+            
+            container.insertBefore(customerGrid, container.firstChild);
         }
-    });
-    
-    // セレクトボックスで未選択の場合の処理
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-        if (!select.value) {
-            select.style.color = '#ccc';
-        }
-    });
+    }
     
     showStatusMessage('印刷プレビューを開いています...', 'info');
     
@@ -3721,10 +3774,11 @@ function printPreview() {
     setTimeout(() => {
         window.print();
         
-        // 印刷後にスタイルを元に戻す
-        selects.forEach(select => {
-            select.style.color = '';
-        });
+        // 印刷後に追加した要素を削除
+        const customerGrid = document.querySelector('.customer-info-grid');
+        if (customerGrid) {
+            customerGrid.remove();
+        }
     }, 500);
 }
 
