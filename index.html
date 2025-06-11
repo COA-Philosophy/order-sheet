@@ -751,41 +751,218 @@ optgroup option {
 
 /* 印刷対応 */
 @media print {
+    /* A4サイズ設定 */
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+    
     body { 
         margin: 0; 
-        background: white; 
+        background: white;
+        font-size: 10pt;
     }
     
     .container { 
         box-shadow: none; 
         margin: 0; 
-        max-width: none; 
+        max-width: none;
+        padding: 0;
+        width: 100%;
     }
     
-    .download-btn { 
-        display: none; 
+    /* ヘッダーを小さく */
+    .header {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
     }
     
-    .add-item-btn, .remove-item-btn { 
-        display: none; 
+    .header h1 {
+        font-size: 18pt;
+        margin: 0;
     }
     
-    .status-message { 
-        display: none; 
+    .header p {
+        font-size: 10pt;
+        margin: 3px 0;
     }
     
-    .essential-info {
-        border-color: #ccc;
+    /* セクションをコンパクトに */
+    .section {
+        margin-bottom: 10px;
+        page-break-inside: avoid;
+    }
+    
+    .section-title {
+        font-size: 12pt;
+        padding: 5px 10px;
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .section-content {
+        padding: 10px;
+    }
+    
+    /* 必須情報セクションを2列に */
+    .essential-info .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .essential-group {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    /* 採寸情報を3列グリッドに */
+    .measurement-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        font-size: 9pt;
+    }
+    
+    /* フォーム要素を印刷用に */
+    .form-group {
+        margin-bottom: 5px;
+    }
+    
+    .form-group label {
+        font-size: 8pt;
+        margin-bottom: 2px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        border: none;
+        border-bottom: 1px solid #333;
+        padding: 2px;
+        font-size: 10pt;
+        background: none;
+    }
+    
+    /* 値が入力されている場合は下線を消す */
+    .form-group input:not(:placeholder-shown),
+    .form-group select:not([value=""]),
+    .form-group textarea:not(:placeholder-shown) {
+        border-bottom: none;
+        font-weight: bold;
+    }
+    
+    /* スタイル・仕様をテーブル形式に */
+    .style-item {
+        border: 1px solid #333;
+        padding: 5px;
+        margin-bottom: 5px;
         background: white;
     }
     
-    .progress-section {
+    /* 価格セクションを目立たせる */
+    .total-section {
+        border: 2px solid #000;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+    }
+    
+    .total-row.grand-total {
+        font-size: 14pt;
+        border-top: 2px solid #000;
+        padding-top: 5px;
+    }
+    
+    /* 署名欄 */
+    .signature-section {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .signature-box {
+        width: 45%;
+        height: 50px;
+        border: 1px solid #000;
+        text-align: center;
+        padding-top: 30px;
+        font-size: 8pt;
+    }
+    
+    /* 非表示要素 */
+    .download-btn,
+    .add-item-btn,
+    .remove-item-btn,
+    .status-message,
+    .progress-section,
+    .save-section,
+    .mobile-next-btn,
+    .address-lookup-btn,
+    .input-hint,
+    .input-guide {
+        display: none !important;
+    }
+    
+    /* ディスカウントセクションを簡潔に */
+    .total-section > div[style*="background: #fff3cd"] {
         display: none;
     }
     
-    .save-section {
-        display: none;
+    /* チェックボックスを印刷用に */
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
+    
+    .checkbox-item {
+        font-size: 9pt;
+    }
+    
+    input[type="checkbox"] {
+        width: 10px;
+        height: 10px;
+    }
+    
+    /* 改ページ制御 */
+    .essential-info {
+        page-break-after: auto;
+    }
+    
+    /* 全般備考を小さく */
+    .notes-area {
+        height: 40px;
+        font-size: 9pt;
+    }
+}
+
+/* 印刷プレビュー用のボタンスタイル */
+.print-preview-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.print-preview-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
 }
 
 /* フォーカス強化 */
@@ -1543,6 +1720,9 @@ select {
             
             <!-- データ保存ボタン -->
             <button type="button" class="download-btn" onclick="saveToCSV()">📊 CSV保存（データ管理用）</button>
+            
+            <!-- 印刷・PDF出力 -->
+            <button type="button" class="print-preview-btn" onclick="printPreview()">🖨️ A4印刷・PDF出力</button>
             
             <!-- バックアップ用 -->
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
@@ -2709,8 +2889,14 @@ function saveToCSV() {
             ...rows.map(row => 
                 row.map(v => {
                     const str = String(v || '');
+                    
+                    // 電話番号の場合は先頭に'を付けてExcelで文字列として認識させる
+                    if (row === values && headers[row.indexOf(v)] === '電話番号' && str !== '') {
+                        return `"'${str}"`;
+                    }
+                    
                     // 数値の場合はそのまま、文字列の場合は必要に応じてクォート
-                    if (!isNaN(str) && str !== '') {
+                    if (!isNaN(str) && str !== '' && headers[row.indexOf(v)] !== '電話番号') {
                         return str;
                     }
                     // カンマ、改行、ダブルクォートを含む場合はクォートで囲む
@@ -3410,6 +3596,50 @@ window.addEventListener('beforeunload', function(e) {
         e.returnValue = '';
     }
 });
+
+// =============================================================================
+// 印刷・PDF機能
+// =============================================================================
+
+// 印刷プレビュー
+function printPreview() {
+    // 印刷前に必須項目をチェック
+    const lastName = document.getElementById('lastName')?.value.trim();
+    const firstName = document.getElementById('firstName')?.value.trim();
+    
+    if (!lastName || !firstName) {
+        showStatusMessage('❌ お客様のお名前を入力してください', 'error');
+        return;
+    }
+    
+    // 空の入力欄にプレースホルダーを設定（印刷時の見栄えのため）
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="email"]');
+    inputs.forEach(input => {
+        if (!input.value && !input.placeholder) {
+            input.placeholder = '―';
+        }
+    });
+    
+    // セレクトボックスで未選択の場合の処理
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        if (!select.value) {
+            select.style.color = '#ccc';
+        }
+    });
+    
+    showStatusMessage('印刷プレビューを開いています...', 'info');
+    
+    // 少し遅延を入れて印刷ダイアログを開く
+    setTimeout(() => {
+        window.print();
+        
+        // 印刷後にスタイルを元に戻す
+        selects.forEach(select => {
+            select.style.color = '';
+        });
+    }, 500);
+}
 
 // =============================================================================
 // デバッグとログ出力
