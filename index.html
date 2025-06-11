@@ -2240,13 +2240,28 @@ function saveAsNewCustomer() {
     
     try {
         const formData = collectFormData();
-        const customerId = formData.orderNumber; // 注文番号を顧客IDとして使用
+        
+        // 新しい顧客IDを生成（既存のIDと重複しないように）
+        const now = new Date();
+        const customerId = 'CUS' + now.getFullYear() + 
+                          String(now.getMonth() + 1).padStart(2, '0') + 
+                          String(now.getDate()).padStart(2, '0') + 
+                          String(now.getHours()).padStart(2, '0') +
+                          String(now.getMinutes()).padStart(2, '0') +
+                          String(now.getSeconds()).padStart(2, '0') +
+                          String(Math.floor(Math.random() * 1000)).padStart(3, '0');
         
         // 顧客リストを取得
         const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
         
         // 新規顧客を追加
-        customers[customerId] = formData;
+        customers[customerId] = {
+            customerId: customerId,
+            lastName: formData.lastName,
+            firstName: formData.firstName,
+            orderNumber: formData.orderNumber,
+            savedDate: new Date().toISOString()
+        };
         
         // 保存
         localStorage.setItem('customerList', JSON.stringify(customers));
@@ -2374,6 +2389,12 @@ function clearForm() {
             checkbox.checked = false;
         });
         
+        // 生年月日の隠しフィールドもクリア
+        const birthDateField = document.getElementById('birthDate');
+        if (birthDateField) {
+            birthDateField.value = '';
+        }
+        
         // 新しい注文番号を生成
         const now = new Date();
         const orderNo = 'ORD' + now.getFullYear() + 
@@ -2398,15 +2419,15 @@ function clearForm() {
         // アイテムを1つにリセット
         const container = document.getElementById('styleItemsContainer');
         if (container) {
-            const items = container.querySelectorAll('.style-item');
-            items.forEach((item, index) => {
-                if (index > 0) {
-                    item.remove();
-                }
-            });
-            itemCounter = 1;
-            updateItemCount();
-            updateRemoveButtons();
+            // 既存のアイテムをすべて削除
+            container.innerHTML = '';
+            
+            // アイテムカウンターをリセット
+            itemCounter = 0;
+            nextItemId = 1;
+            
+            // 新しいアイテムを1つ追加
+            addStyleItem();
         }
         
         // 状態を更新
@@ -2669,12 +2690,53 @@ function setupAutoBackup() {
 
 function loadDataToForm(data) {
     try {
+        // フォームを一旦クリア（確認なし）
+        clearFormWithoutConfirm();
+        
+        // 基本情報
+        if (data.orderNumber) {
+            const orderNumberElement = document.getElementById('orderNumber');
+            if (orderNumberElement) {
+                orderNumberElement.textContent = data.orderNumber;
+            }
+        }
+        
         if (data.lastName) document.getElementById('lastName').value = data.lastName;
         if (data.firstName) document.getElementById('firstName').value = data.firstName;
+        if (data.lastNameKana) document.getElementById('lastNameKana').value = data.lastNameKana;
+        if (data.firstNameKana) document.getElementById('firstNameKana').value = data.firstNameKana;
         if (data.phone) document.getElementById('phone').value = data.phone;
         if (data.email) document.getElementById('email').value = data.email;
+        if (data.lineId) document.getElementById('lineId').value = data.lineId;
+        if (data.referrer) document.getElementById('referrer').value = data.referrer;
+        if (data.gender) document.getElementById('gender').value = data.gender;
+        if (data.occupation) document.getElementById('occupation').value = data.occupation;
+        
+        // 生年月日
+        if (data.birthDate) {
+            const birthParts = data.birthDate.split('-');
+            if (birthParts.length === 3) {
+                const birthYear = document.getElementById('birthYear');
+                const birthMonth = document.getElementById('birthMonth');
+                const birthDay = document.getElementById('birthDay');
+                
+                if (birthYear) birthYear.value = birthParts[0];
+                if (birthMonth) birthMonth.value = parseInt(birthParts[1]);
+                
+                // 日の選択肢を更新してから値を設定
+                updateDays();
+                setTimeout(() => {
+                    if (birthDay) birthDay.value = parseInt(birthParts[2]);
+                }, 100);
+            }
+        }
+        
+        // 住所
+        if (data.postalCode) document.getElementById('postalCode').value = data.postalCode;
+        if (data.prefecture) document.getElementById('prefecture').value = data.prefecture;
         if (data.address) document.getElementById('address').value = data.address;
         
+        // 採寸情報
         if (data.measurements) {
             Object.keys(data.measurements).forEach(key => {
                 const element = document.getElementById(key);
@@ -2684,35 +2746,134 @@ function loadDataToForm(data) {
             });
         }
         
+        // アイテム情報
         if (data.items && data.items.length > 0) {
-            const firstItem = data.items[0];
-            if (firstItem.itemType) {
-                const itemTypeElement = document.getElementById('itemType_1');
-                if (itemTypeElement) itemTypeElement.value = firstItem.itemType;
-            }
-            if (firstItem.fabric) {
-                const fabricElement = document.getElementById('fabric_1');
-                if (fabricElement) fabricElement.value = firstItem.fabric;
-            }
-            if (firstItem.price) {
-                const priceElement = document.getElementById('price_1');
-                if (priceElement) priceElement.value = firstItem.price;
-            }
-            if (firstItem.lapelStyle) {
-                const lapelElement = document.getElementById('lapelStyle_1');
-                if (lapelElement) lapelElement.value = firstItem.lapelStyle;
-            }
-            if (firstItem.cuffStyle) {
-                const cuffElement = document.getElementById('cuffStyle_1');
-                if (cuffElement) cuffElement.value = firstItem.cuffStyle;
+            const container = document.getElementById('styleItemsContainer');
+            if (container) {
+                // 既存のアイテムをクリア
+                container.innerHTML = '';
+                itemCounter = 0;
+                nextItemId = 1;
+                
+                // 保存されたアイテムを復元
+                data.items.forEach((item, index) => {
+                    addStyleItem();
+                    
+                    // アイテムのデータを設定
+                    const itemId = nextItemId - 1;
+                    
+                    if (item.itemType) {
+                        const itemTypeElement = document.getElementById(`itemType_${itemId}`);
+                        if (itemTypeElement) itemTypeElement.value = item.itemType;
+                    }
+                    if (item.fabric) {
+                        const fabricElement = document.getElementById(`fabric_${itemId}`);
+                        if (fabricElement) fabricElement.value = item.fabric;
+                    }
+                    if (item.color) {
+                        const colorElement = document.getElementById(`color_${itemId}`);
+                        if (colorElement) colorElement.value = item.color;
+                    }
+                    if (item.jacketStyle) {
+                        const jacketStyleElement = document.getElementById(`jacketStyle_${itemId}`);
+                        if (jacketStyleElement) jacketStyleElement.value = item.jacketStyle;
+                    }
+                    if (item.lining) {
+                        const liningElement = document.getElementById(`lining_${itemId}`);
+                        if (liningElement) liningElement.value = item.lining;
+                    }
+                    if (item.buttons) {
+                        const buttonsElement = document.getElementById(`buttons_${itemId}`);
+                        if (buttonsElement) buttonsElement.value = item.buttons;
+                    }
+                    if (item.lapelStyle) {
+                        const lapelElement = document.getElementById(`lapelStyle_${itemId}`);
+                        if (lapelElement) lapelElement.value = item.lapelStyle;
+                    }
+                    if (item.cuffStyle) {
+                        const cuffElement = document.getElementById(`cuffStyle_${itemId}`);
+                        if (cuffElement) cuffElement.value = item.cuffStyle;
+                    }
+                    if (item.cuffDetails) {
+                        const cuffDetailsElement = document.getElementById(`cuffDetails_${itemId}`);
+                        if (cuffDetailsElement) cuffDetailsElement.value = item.cuffDetails;
+                    }
+                    if (item.price) {
+                        const priceElement = document.getElementById(`price_${itemId}`);
+                        if (priceElement) priceElement.value = item.price;
+                    }
+                    if (item.deliveryDate) {
+                        const deliveryDateElement = document.getElementById(`deliveryDate_${itemId}`);
+                        if (deliveryDateElement) deliveryDateElement.value = item.deliveryDate;
+                    }
+                    if (item.notes) {
+                        const notesElement = document.getElementById(`notes_${itemId}`);
+                        if (notesElement) notesElement.value = item.notes;
+                    }
+                    
+                    // オプション（チェックボックス）
+                    if (item.options && Array.isArray(item.options)) {
+                        item.options.forEach(option => {
+                            const checkboxes = document.querySelectorAll(`[data-item="${itemId}"] input[type="checkbox"]`);
+                            checkboxes.forEach(checkbox => {
+                                const label = checkbox.nextElementSibling;
+                                if (label && label.textContent === option) {
+                                    checkbox.checked = true;
+                                }
+                            });
+                        });
+                    }
+                });
             }
         }
+        
+        // 支払い情報
+        if (data.payment) {
+            if (data.payment.method) document.getElementById('paymentMethod').value = data.payment.method;
+            if (data.payment.deposit) document.getElementById('deposit').value = data.payment.deposit;
+            if (data.payment.balance) document.getElementById('balance').value = data.payment.balance;
+            if (data.payment.orderDate) document.getElementById('orderDate').value = data.payment.orderDate;
+            if (data.payment.fittingDate) document.getElementById('fittingDate').value = data.payment.fittingDate;
+            if (data.payment.completionDate) document.getElementById('completionDate').value = data.payment.completionDate;
+        }
+        
+        // 備考
+        if (data.generalNotes) document.getElementById('generalNotes').value = data.generalNotes;
         
         updateTotalPrice();
         checkEssentialFields();
         
     } catch (error) {
         console.error('データ読み込みエラー:', error);
+        showStatusMessage('❌ データの読み込み中にエラーが発生しました', 'error');
+    }
+}
+
+// 確認なしでフォームをクリアする関数
+function clearFormWithoutConfirm() {
+    // すべての入力フィールドをクリア
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], textarea');
+    inputs.forEach(input => {
+        input.value = '';
+        input.classList.remove('valid', 'invalid');
+    });
+    
+    // セレクトボックスをリセット
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        select.selectedIndex = 0;
+    });
+    
+    // チェックボックスをクリア
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // 生年月日の隠しフィールドもクリア
+    const birthDateField = document.getElementById('birthDate');
+    if (birthDateField) {
+        birthDateField.value = '';
     }
 }
 
