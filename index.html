@@ -1481,19 +1481,31 @@ select {
 
         <!-- 保存ボタンエリア -->
         <div class="save-section">
-            <h3 style="text-align: center; color: #2c3e50; margin: 20px 0;">データ保存オプション</h3>
+            <h3 style="text-align: center; color: #2c3e50; margin: 20px 0;">データ管理</h3>
             
-            <!-- メイン保存ボタン -->
-            <button type="button" class="download-btn save-btn" onclick="saveToPDF()">📄 PDF保存（おすすめ）</button>
-            <button type="button" class="download-btn" onclick="saveToExcel()">📊 Excel保存（編集可能）</button>
+            <!-- 顧客切り替え機能 -->
+            <div style="margin-bottom: 30px; padding: 20px; background: #e3f2fd; border-radius: 8px;">
+                <h4 style="color: #1976d2; margin-bottom: 15px;">👥 複数顧客管理</h4>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <select id="customerSelect" style="flex: 1; min-width: 200px; padding: 10px; border-radius: 8px; border: 2px solid #1976d2;">
+                        <option value="">顧客を選択...</option>
+                    </select>
+                    <button type="button" class="download-btn" style="background: linear-gradient(135deg, #1976d2, #1565c0); min-width: auto; padding: 10px 20px;" onclick="loadCustomerData()">読込</button>
+                    <button type="button" class="download-btn" style="background: linear-gradient(135deg, #f44336, #d32f2f); min-width: auto; padding: 10px 20px;" onclick="deleteCustomerData()">削除</button>
+                </div>
+                <button type="button" class="download-btn" style="background: linear-gradient(135deg, #4caf50, #388e3c); width: 100%;" onclick="saveAsNewCustomer()">
+                    ➕ 現在の入力を新規顧客として保存
+                </button>
+            </div>
+            
+            <!-- データ保存ボタン -->
             <button type="button" class="download-btn" onclick="saveToCSV()">📊 CSV保存（データ管理用）</button>
             
             <!-- バックアップ用 -->
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
                 <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 10px;">その他のオプション</p>
                 <button type="button" class="download-btn" onclick="window.print()">🖨️ 印刷・PDF出力</button>
-                <button type="button" class="download-btn" onclick="saveBackupData()">💾 バックアップ保存</button>
-                <button type="button" class="download-btn" onclick="loadBackupData()">📂 バックアップ読込</button>
+                <button type="button" class="download-btn" onclick="clearForm()">🔄 フォームをクリア（新規入力）</button>
             </div>
         </div>
     </div>
@@ -1508,6 +1520,7 @@ select {
 const CRM_API_URL = 'https://script.google.com/macros/s/AKfycbxxap6gn_T7T5rRnCGfACRtQC6tXtSfNjWPtZ2ip4bftZ8JoR11un2u04mdSEpIHNDiHg/exec';
 let itemCounter = 1;
 let nextItemId = 2;
+let currentCustomerId = null; // 現在編集中の顧客ID
 
 // =============================================================================
 // システム初期化
@@ -1550,27 +1563,12 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotalPrice();
     checkEssentialFields();
     
+    // 顧客リストの初期化
+    loadCustomerList();
+    
     // 自動バックアップ開始（localStorage利用可能な場合のみ）
     if (typeof(Storage) !== "undefined" && !isInSandbox()) {
         setupAutoBackup();
-        
-        // バックアップがある場合は通知
-        try {
-            const backupData = localStorage.getItem('orderSheetBackup');
-            if (backupData) {
-                const backupDate = localStorage.getItem('orderSheetBackupDate');
-                const date = new Date(backupDate);
-                const dateStr = date.toLocaleString('ja-JP');
-                
-                setTimeout(() => {
-                    if (confirm(`前回のバックアップデータがあります（${dateStr}）。\n読み込みますか？`)) {
-                        loadBackupData();
-                    }
-                }, 1000);
-            }
-        } catch (e) {
-            console.log('localStorage is not available in this environment');
-        }
     }
     
     showStatusMessage('システムが初期化されました。', 'info');
@@ -2198,116 +2196,245 @@ function collectFormData() {
 }
 
 // =============================================================================
+// 複数顧客管理機能
+// =============================================================================
+
+// 顧客リストを読み込み
+function loadCustomerList() {
+    if (isInSandbox()) return;
+    
+    try {
+        const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
+        const selectElement = document.getElementById('customerSelect');
+        
+        if (selectElement) {
+            selectElement.innerHTML = '<option value="">顧客を選択...</option>';
+            
+            Object.keys(customers).forEach(customerId => {
+                const customer = customers[customerId];
+                const option = document.createElement('option');
+                option.value = customerId;
+                option.textContent = `${customer.lastName} ${customer.firstName} (${customer.orderNumber})`;
+                selectElement.appendChild(option);
+            });
+        }
+    } catch (e) {
+        console.error('顧客リスト読み込みエラー:', e);
+    }
+}
+
+// 新規顧客として保存
+function saveAsNewCustomer() {
+    const lastName = document.getElementById('lastName')?.value.trim();
+    const firstName = document.getElementById('firstName')?.value.trim();
+    
+    if (!lastName || !firstName) {
+        showStatusMessage('❌ お名前を入力してください', 'error');
+        return;
+    }
+    
+    if (isInSandbox()) {
+        showStatusMessage('⚠️ この環境では顧客保存機能が利用できません', 'info');
+        return;
+    }
+    
+    try {
+        const formData = collectFormData();
+        const customerId = formData.orderNumber; // 注文番号を顧客IDとして使用
+        
+        // 顧客リストを取得
+        const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
+        
+        // 新規顧客を追加
+        customers[customerId] = formData;
+        
+        // 保存
+        localStorage.setItem('customerList', JSON.stringify(customers));
+        localStorage.setItem(`customer_${customerId}`, JSON.stringify(formData));
+        
+        currentCustomerId = customerId;
+        
+        // リストを更新
+        loadCustomerList();
+        
+        // 選択状態にする
+        const selectElement = document.getElementById('customerSelect');
+        if (selectElement) {
+            selectElement.value = customerId;
+        }
+        
+        showStatusMessage(`✅ ${lastName} ${firstName}様のデータを保存しました`, 'success');
+        
+    } catch (error) {
+        console.error('顧客保存エラー:', error);
+        showStatusMessage('❌ 顧客データの保存に失敗しました', 'error');
+    }
+}
+
+// 顧客データを読み込み
+function loadCustomerData() {
+    const selectElement = document.getElementById('customerSelect');
+    const customerId = selectElement?.value;
+    
+    if (!customerId) {
+        showStatusMessage('顧客を選択してください', 'info');
+        return;
+    }
+    
+    if (isInSandbox()) {
+        showStatusMessage('⚠️ この環境では顧客読込機能が利用できません', 'info');
+        return;
+    }
+    
+    try {
+        const customerData = localStorage.getItem(`customer_${customerId}`);
+        if (customerData) {
+            const data = JSON.parse(customerData);
+            
+            // 現在のデータがある場合は確認
+            const lastName = document.getElementById('lastName')?.value;
+            const firstName = document.getElementById('firstName')?.value;
+            
+            if ((lastName || firstName) && 
+                confirm('現在の入力内容は失われます。続行しますか？')) {
+                loadDataToForm(data);
+                currentCustomerId = customerId;
+                showStatusMessage(`✅ ${data.lastName} ${data.firstName}様のデータを読み込みました`, 'success');
+            }
+        }
+    } catch (error) {
+        console.error('顧客データ読み込みエラー:', error);
+        showStatusMessage('❌ 顧客データの読み込みに失敗しました', 'error');
+    }
+}
+
+// 顧客データを削除
+function deleteCustomerData() {
+    const selectElement = document.getElementById('customerSelect');
+    const customerId = selectElement?.value;
+    
+    if (!customerId) {
+        showStatusMessage('削除する顧客を選択してください', 'info');
+        return;
+    }
+    
+    if (isInSandbox()) {
+        showStatusMessage('⚠️ この環境では顧客削除機能が利用できません', 'info');
+        return;
+    }
+    
+    try {
+        const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
+        const customer = customers[customerId];
+        
+        if (customer && confirm(`${customer.lastName} ${customer.firstName}様のデータを削除しますか？\nこの操作は取り消せません。`)) {
+            // 顧客リストから削除
+            delete customers[customerId];
+            localStorage.setItem('customerList', JSON.stringify(customers));
+            
+            // 個別データも削除
+            localStorage.removeItem(`customer_${customerId}`);
+            
+            // 現在編集中の顧客の場合はクリア
+            if (currentCustomerId === customerId) {
+                currentCustomerId = null;
+                clearForm();
+            }
+            
+            // リストを更新
+            loadCustomerList();
+            
+            showStatusMessage(`✅ ${customer.lastName} ${customer.firstName}様のデータを削除しました`, 'success');
+        }
+    } catch (error) {
+        console.error('顧客削除エラー:', error);
+        showStatusMessage('❌ 顧客データの削除に失敗しました', 'error');
+    }
+}
+
+// フォームをクリア
+function clearForm() {
+    if (confirm('すべての入力内容をクリアしますか？')) {
+        // すべての入力フィールドをクリア
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"], input[type="date"], textarea');
+        inputs.forEach(input => {
+            input.value = '';
+            input.classList.remove('valid', 'invalid');
+        });
+        
+        // セレクトボックスをリセット
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.selectedIndex = 0;
+        });
+        
+        // チェックボックスをクリア
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        
+        // 新しい注文番号を生成
+        const now = new Date();
+        const orderNo = 'ORD' + now.getFullYear() + 
+                       String(now.getMonth() + 1).padStart(2, '0') + 
+                       String(now.getDate()).padStart(2, '0') + 
+                       String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+        
+        const orderNumberElement = document.getElementById('orderNumber');
+        if (orderNumberElement) {
+            orderNumberElement.textContent = orderNo;
+        }
+        
+        // 現在の顧客IDをクリア
+        currentCustomerId = null;
+        
+        // 顧客選択もリセット
+        const customerSelect = document.getElementById('customerSelect');
+        if (customerSelect) {
+            customerSelect.selectedIndex = 0;
+        }
+        
+        // アイテムを1つにリセット
+        const container = document.getElementById('styleItemsContainer');
+        if (container) {
+            const items = container.querySelectorAll('.style-item');
+            items.forEach((item, index) => {
+                if (index > 0) {
+                    item.remove();
+                }
+            });
+            itemCounter = 1;
+            updateItemCount();
+            updateRemoveButtons();
+        }
+        
+        // 状態を更新
+        checkEssentialFields();
+        updateTotalPrice();
+        
+        showStatusMessage('✅ フォームをクリアしました', 'success');
+    }
+}
+
+// 自動保存機能を修正（現在の顧客に上書き保存）
+function autoSaveCurrentCustomer() {
+    if (currentCustomerId && !isInSandbox()) {
+        try {
+            const formData = collectFormData();
+            localStorage.setItem(`customer_${currentCustomerId}`, JSON.stringify(formData));
+            console.log(`顧客 ${currentCustomerId} のデータを自動保存しました`);
+        } catch (e) {
+            console.error('自動保存エラー:', e);
+        }
+    }
+}
+
+// =============================================================================
 // 実用的な保存機能
 // =============================================================================
 
-// PDF保存（HTMLをPDF化）
-function saveToPDF() {
-    try {
-        showStatusMessage('PDF保存画面を開いています...', 'info');
-        
-        // 印刷プレビューを開く（ブラウザのPDF保存機能を利用）
-        window.print();
-        
-        showStatusMessage('印刷画面で「PDFとして保存」を選択してください', 'info');
-    } catch (error) {
-        console.error('PDF保存エラー:', error);
-        showStatusMessage('❌ PDF保存に失敗しました', 'error');
-    }
-}
-
-// Excel形式（CSV）で保存 - Excelで開ける形式
-function saveToExcel() {
-    try {
-        const formData = collectFormData();
-        const now = new Date();
-        const dateStr = now.getFullYear() + 
-                       String(now.getMonth() + 1).padStart(2, '0') + 
-                       String(now.getDate()).padStart(2, '0');
-        
-        // Excel用の見やすい形式でデータを整形
-        const rows = [];
-        
-        // ヘッダー情報
-        rows.push(['オーダーシート']);
-        rows.push([]);
-        rows.push(['作成日時', new Date().toLocaleString('ja-JP')]);
-        rows.push(['注文番号', formData.orderNumber]);
-        rows.push([]);
-        
-        // お客様情報
-        rows.push(['【お客様情報】']);
-        rows.push(['お名前', formData.lastName + ' ' + formData.firstName]);
-        rows.push(['フリガナ', formData.lastNameKana + ' ' + formData.firstNameKana]);
-        rows.push(['生年月日', formData.birthDate]);
-        rows.push(['電話番号', formData.phone]);
-        rows.push(['メールアドレス', formData.email || '']);
-        rows.push(['郵便番号', formData.postalCode || '']);
-        rows.push(['住所', formData.prefecture + formData.address]);
-        rows.push([]);
-        
-        // 採寸情報
-        rows.push(['【採寸情報】']);
-        if (formData.measurements.height) rows.push(['身長', formData.measurements.height + 'cm']);
-        if (formData.measurements.weight) rows.push(['体重', formData.measurements.weight + 'kg']);
-        if (formData.measurements.chest) rows.push(['胸囲', formData.measurements.chest + 'cm']);
-        if (formData.measurements.waist) rows.push(['ウエスト', formData.measurements.waist + 'cm']);
-        if (formData.measurements.hip) rows.push(['ヒップ', formData.measurements.hip + 'cm']);
-        if (formData.measurements.shoulderWidth) rows.push(['肩幅', formData.measurements.shoulderWidth + 'cm']);
-        rows.push([]);
-        
-        // オーダー内容
-        rows.push(['【オーダー内容】']);
-        formData.items.forEach((item, index) => {
-            rows.push([`アイテム${index + 1}`]);
-            rows.push(['タイプ', item.itemType || '']);
-            rows.push(['生地', item.fabric || '']);
-            rows.push(['色', item.color || '']);
-            rows.push(['価格', '¥' + (item.price || 0).toLocaleString()]);
-            rows.push(['納期', item.deliveryDate || '']);
-            rows.push([]);
-        });
-        
-        // 総計
-        rows.push(['【お支払い情報】']);
-        rows.push(['総計', '¥' + formData.totalPrice.toLocaleString()]);
-        rows.push(['お支払い方法', formData.payment.method || '']);
-        rows.push(['内金', '¥' + (formData.payment.deposit || 0).toLocaleString()]);
-        rows.push(['残金', '¥' + (formData.payment.balance || 0).toLocaleString()]);
-        
-        // CSVに変換（Excel対応）
-        const csvContent = rows.map(row => 
-            row.map(cell => {
-                const str = String(cell || '');
-                // カンマや改行を含む場合はダブルクォートで囲む
-                if (str.includes(',') || str.includes('\n') || str.includes('"')) {
-                    return '"' + str.replace(/"/g, '""') + '"';
-                }
-                return str;
-            }).join(',')
-        ).join('\n');
-        
-        // BOMを追加（Excel文字化け対策）
-        const bom = '\uFEFF';
-        const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8' });
-        
-        const customerName = (formData.lastName + formData.firstName) || 'お客様';
-        const filename = `オーダーシート_${customerName}_${dateStr}.csv`;
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        showStatusMessage(`✅ Excelファイルとして保存しました: ${filename}`, 'success');
-        
-    } catch (error) {
-        console.error('Excel保存エラー:', error);
-        showStatusMessage('❌ Excel保存に失敗しました', 'error');
-    }
-}
+// PDF保存とExcel保存の関数は削除し、CSV保存のみ残す
 
 // データ管理用CSV保存（CRM顧客マスター対応版）
 function saveToCSV() {
@@ -2520,10 +2647,18 @@ function setupAutoBackup() {
         const lastName = document.getElementById('lastName')?.value;
         const firstName = document.getElementById('firstName')?.value;
         
-        // 名前が入力されている場合のみ自動バックアップ
+        // 名前が入力されている場合
         if (lastName || firstName) {
             try {
-                saveBackupData();
+                if (currentCustomerId) {
+                    // 既存顧客の場合は上書き保存
+                    autoSaveCurrentCustomer();
+                } else {
+                    // 新規の場合は一時バックアップ
+                    const formData = collectFormData();
+                    localStorage.setItem('orderSheetBackup', JSON.stringify(formData));
+                    localStorage.setItem('orderSheetBackupDate', new Date().toISOString());
+                }
                 console.log('自動バックアップ完了:', new Date().toLocaleString());
             } catch (e) {
                 console.log('自動バックアップエラー:', e);
