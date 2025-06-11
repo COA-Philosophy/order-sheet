@@ -1683,29 +1683,92 @@ select {
                         <div class="form-group">
                             <label>オプション</label>
                             <div class="checkbox-group">
-                                <div class="checkbox-item">
-                                    <input type="checkbox" id="ticket_pocket_1" name="options_1">
-                                    <label for="ticket_pocket_1">チケットポケット</label>
+                                <div style="width: 100%; margin-bottom: 10px;">
+                                    <strong style="color: #2c3e50;">ジャケットオプション</strong>
                                 </div>
                                 <div class="checkbox-item">
-                                    <input type="checkbox" id="amf_stitch_1" name="options_1">
-                                    <label for="amf_stitch_1">AMFステッチ</label>
+                                    <input type="checkbox" id="full_stitch_1" name="options_1" data-price="1500" onchange="updateTotalPrice()">
+                                    <label for="full_stitch_1">フルステッチ (¥1,500)</label>
                                 </div>
                                 <div class="checkbox-item">
-                                    <input type="checkbox" id="functional_sleeves_1" name="options_1">
-                                    <label for="functional_sleeves_1">本切羽</label>
+                                    <input type="checkbox" id="functional_sleeves_1" name="options_1" data-price="1500" onchange="updateTotalPrice()">
+                                    <label for="functional_sleeves_1">本切羽 (¥1,500)</label>
                                 </div>
                                 <div class="checkbox-item">
-                                    <input type="checkbox" id="side_vents_1" name="options_1">
-                                    <label for="side_vents_1">サイドベンツ</label>
+                                    <input type="checkbox" id="buttonhole_color_1" name="options_1" data-price="1500" onchange="updateTotalPrice()">
+                                    <label for="buttonhole_color_1">ボタンホール色変え (¥1,500)</label>
                                 </div>
                                 <div class="checkbox-item">
-                                    <input type="checkbox" id="suspender_buttons_1" name="options_1">
-                                    <label for="suspender_buttons_1">サスペンダーボタン</label>
+                                    <input type="checkbox" id="kurumi_button_1" name="options_1" data-price="1500" onchange="updateTotalPrice()">
+                                    <label for="kurumi_button_1">クルミ釦 (¥1,500)</label>
+                                </div>
+                                
+                                <div style="width: 100%; margin: 10px 0;">
+                                    <strong style="color: #2c3e50;">裏地オプション</strong>
                                 </div>
                                 <div class="checkbox-item">
-                                    <input type="checkbox" id="center_vent_1" name="options_1">
-                                    <label for="center_vent_1">センターベンツ</label>
+                                    <input type="checkbox" id="lining_a_1" name="options_1" data-price="2500" onchange="updateTotalPrice()">
+                                    <label for="lining_a_1">有料裏地A (¥2,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="lining_b_1" name="options_1" data-price="5000" onchange="updateTotalPrice()">
+                                    <label for="lining_b_1">有料裏地B (¥5,000)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="lining_c_1" name="options_1" data-price="17000" onchange="updateTotalPrice()">
+                                    <label for="lining_c_1">有料裏地C (¥17,000)</label>
+                                </div>
+                                
+                                <div style="width: 100%; margin: 10px 0;">
+                                    <strong style="color: #2c3e50;">ボタンオプション</strong>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="button_a_1" name="options_1" data-price="1000" onchange="updateTotalPrice()">
+                                    <label for="button_a_1">有料ボタンA (¥1,000)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="button_b_1" name="options_1" data-price="2500" onchange="updateTotalPrice()">
+                                    <label for="button_b_1">有料ボタンB (¥2,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="button_c_1" name="options_1" data-price="3900" onchange="updateTotalPrice()">
+                                    <label for="button_c_1">有料ボタンC (¥3,900)</label>
+                                </div>
+                                
+                                <div style="width: 100%; margin: 10px 0;">
+                                    <strong style="color: #2c3e50;">パンツオプション</strong>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="watch_pocket_1" name="options_1" data-price="1500" onchange="updateTotalPrice()">
+                                    <label for="watch_pocket_1">ウォッチポケット (¥1,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="full_lining_1" name="options_1" data-price="2500" onchange="updateTotalPrice()">
+                                    <label for="full_lining_1">総裏仕様 (¥2,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="side_adjuster_1" name="options_1" data-price="2500" onchange="updateTotalPrice()">
+                                    <label for="side_adjuster_1">サイド尾錠 (¥2,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="button_fly_1" name="options_1" data-price="1000" onchange="updateTotalPrice()">
+                                    <label for="button_fly_1">ボタン仕様 (¥1,000)</label>
+                                </div>
+                                
+                                <div style="width: 100%; margin: 10px 0;">
+                                    <strong style="color: #2c3e50;">ベストオプション</strong>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vest_collar_1" name="options_1" data-price="3000" onchange="updateTotalPrice()">
+                                    <label for="vest_collar_1">衿付き (¥3,000)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vest_back_1" name="options_1" data-price="2000" onchange="updateTotalPrice()">
+                                    <label for="vest_back_1">背共生地 (¥2,000)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="vest_double_1" name="options_1" data-price="3000" onchange="updateTotalPrice()">
+                                    <label for="vest_double_1">ダブル (¥3,000)</label>
                                 </div>
                             </div>
                         </div>
@@ -2519,11 +2582,15 @@ function collectFormData() {
         const itemId = item.getAttribute('data-item');
         
         const options = [];
+        let optionPrices = 0;
         const checkboxes = item.querySelectorAll('input[type="checkbox"]:checked');
         checkboxes.forEach(checkbox => {
             const label = checkbox.nextElementSibling;
             if (label) {
                 options.push(label.textContent);
+                // オプション価格を計算
+                const price = parseInt(checkbox.getAttribute('data-price')) || 0;
+                optionPrices += price;
             }
         });
         
@@ -2541,6 +2608,7 @@ function collectFormData() {
             cuffStyle: document.getElementById(`cuffStyle_${itemId}`)?.value || '',
             cuffDetails: document.getElementById(`cuffDetails_${itemId}`)?.value || '',
             options: options,
+            optionPrices: optionPrices,
             price: parseInt(document.getElementById(`price_${itemId}`)?.value) || 0,
             deliveryDate: document.getElementById(`deliveryDate_${itemId}`)?.value || '',
             notes: document.getElementById(`notes_${itemId}`)?.value || ''
@@ -3545,29 +3613,92 @@ function addStyleItem() {
             <div class="form-group">
                 <label>オプション</label>
                 <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="ticket_pocket_${itemId}" name="options_${itemId}">
-                        <label for="ticket_pocket_${itemId}">チケットポケット</label>
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <strong style="color: #2c3e50;">ジャケットオプション</strong>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="amf_stitch_${itemId}" name="options_${itemId}">
-                        <label for="amf_stitch_${itemId}">AMFステッチ</label>
+                        <input type="checkbox" id="full_stitch_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
+                        <label for="full_stitch_${itemId}">フルステッチ (¥1,500)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="functional_sleeves_${itemId}" name="options_${itemId}">
-                        <label for="functional_sleeves_${itemId}">本切羽</label>
+                        <input type="checkbox" id="functional_sleeves_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
+                        <label for="functional_sleeves_${itemId}">本切羽 (¥1,500)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="side_vents_${itemId}" name="options_${itemId}">
-                        <label for="side_vents_${itemId}">サイドベンツ</label>
+                        <input type="checkbox" id="buttonhole_color_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
+                        <label for="buttonhole_color_${itemId}">ボタンホール色変え (¥1,500)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="suspender_buttons_${itemId}" name="options_${itemId}">
-                        <label for="suspender_buttons_${itemId}">サスペンダーボタン</label>
+                        <input type="checkbox" id="kurumi_button_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
+                        <label for="kurumi_button_${itemId}">クルミ釦 (¥1,500)</label>
+                    </div>
+                    
+                    <div style="width: 100%; margin: 10px 0;">
+                        <strong style="color: #2c3e50;">裏地オプション</strong>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="center_vent_${itemId}" name="options_${itemId}">
-                        <label for="center_vent_${itemId}">センターベンツ</label>
+                        <input type="checkbox" id="lining_a_${itemId}" name="options_${itemId}" data-price="2500" onchange="updateTotalPrice()">
+                        <label for="lining_a_${itemId}">有料裏地A (¥2,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lining_b_${itemId}" name="options_${itemId}" data-price="5000" onchange="updateTotalPrice()">
+                        <label for="lining_b_${itemId}">有料裏地B (¥5,000)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lining_c_${itemId}" name="options_${itemId}" data-price="17000" onchange="updateTotalPrice()">
+                        <label for="lining_c_${itemId}">有料裏地C (¥17,000)</label>
+                    </div>
+                    
+                    <div style="width: 100%; margin: 10px 0;">
+                        <strong style="color: #2c3e50;">ボタンオプション</strong>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="button_a_${itemId}" name="options_${itemId}" data-price="1000" onchange="updateTotalPrice()">
+                        <label for="button_a_${itemId}">有料ボタンA (¥1,000)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="button_b_${itemId}" name="options_${itemId}" data-price="2500" onchange="updateTotalPrice()">
+                        <label for="button_b_${itemId}">有料ボタンB (¥2,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="button_c_${itemId}" name="options_${itemId}" data-price="3900" onchange="updateTotalPrice()">
+                        <label for="button_c_${itemId}">有料ボタンC (¥3,900)</label>
+                    </div>
+                    
+                    <div style="width: 100%; margin: 10px 0;">
+                        <strong style="color: #2c3e50;">パンツオプション</strong>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="watch_pocket_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
+                        <label for="watch_pocket_${itemId}">ウォッチポケット (¥1,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="full_lining_${itemId}" name="options_${itemId}" data-price="2500" onchange="updateTotalPrice()">
+                        <label for="full_lining_${itemId}">総裏仕様 (¥2,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="side_adjuster_${itemId}" name="options_${itemId}" data-price="2500" onchange="updateTotalPrice()">
+                        <label for="side_adjuster_${itemId}">サイド尾錠 (¥2,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="button_fly_${itemId}" name="options_${itemId}" data-price="1000" onchange="updateTotalPrice()">
+                        <label for="button_fly_${itemId}">ボタン仕様 (¥1,000)</label>
+                    </div>
+                    
+                    <div style="width: 100%; margin: 10px 0;">
+                        <strong style="color: #2c3e50;">ベストオプション</strong>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="vest_collar_${itemId}" name="options_${itemId}" data-price="3000" onchange="updateTotalPrice()">
+                        <label for="vest_collar_${itemId}">衿付き (¥3,000)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="vest_back_${itemId}" name="options_${itemId}" data-price="2000" onchange="updateTotalPrice()">
+                        <label for="vest_back_${itemId}">背共生地 (¥2,000)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="vest_double_${itemId}" name="options_${itemId}" data-price="3000" onchange="updateTotalPrice()">
+                        <label for="vest_double_${itemId}">ダブル (¥3,000)</label>
                     </div>
                 </div>
             </div>
@@ -3655,21 +3786,37 @@ function updateTotalPrice() {
         const priceInput = document.getElementById(`price_${itemId}`);
         const itemTypeSelect = document.getElementById(`itemType_${itemId}`);
         
+        let itemTotal = 0;
+        
+        // 基本価格
         if (priceInput && priceInput.value) {
-            const price = parseInt(priceInput.value) || 0;
+            itemTotal = parseInt(priceInput.value) || 0;
+        }
+        
+        // オプション価格を加算
+        const optionCheckboxes = item.querySelectorAll('input[type="checkbox"]:checked[data-price]');
+        let optionTotal = 0;
+        optionCheckboxes.forEach(checkbox => {
+            optionTotal += parseInt(checkbox.getAttribute('data-price')) || 0;
+        });
+        
+        itemTotal += optionTotal;
+        total += itemTotal;
+        
+        // 明細に表示
+        if (breakdown && itemTotal > 0) {
             const itemType = itemTypeSelect ? itemTypeSelect.value || `アイテム ${itemId}` : `アイテム ${itemId}`;
-            
-            total += price;
-            
-            if (breakdown) {
-                const row = document.createElement('div');
-                row.className = 'total-row';
-                row.innerHTML = `
-                    <span>${itemType}</span>
-                    <span>¥${price.toLocaleString()}</span>
-                `;
-                breakdown.appendChild(row);
+            const row = document.createElement('div');
+            row.className = 'total-row';
+            let displayText = itemType;
+            if (optionTotal > 0) {
+                displayText += ` (オプション: ¥${optionTotal.toLocaleString()})`;
             }
+            row.innerHTML = `
+                <span>${displayText}</span>
+                <span>¥${itemTotal.toLocaleString()}</span>
+            `;
+            breakdown.appendChild(row);
         }
     });
 
