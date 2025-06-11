@@ -1574,8 +1574,16 @@ select {
                                 <label for="jacketStyle_1">ジャケットスタイル</label>
                                 <select id="jacketStyle_1" name="jacketStyle_1">
                                     <option value="">選択してください</option>
-                                    <option value="single">シングル</option>
-                                    <option value="double">ダブル</option>
+                                    <optgroup label="シングル">
+                                        <option value="single_2x1">シングル２×１</option>
+                                        <option value="single_1x1">シングル１×１</option>
+                                        <option value="single_3x1">シングル３×１</option>
+                                    </optgroup>
+                                    <optgroup label="ダブル">
+                                        <option value="double_6x2">ダブル６×２</option>
+                                        <option value="double_4x2">ダブル４×２</option>
+                                        <option value="double_2x1">ダブル２×１</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1585,6 +1593,30 @@ select {
                             <div class="form-group">
                                 <label for="buttons_1">ボタン</label>
                                 <input type="text" id="buttons_1" name="buttons_1" placeholder="ボタンの種類・材質">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="chestPocket_1">胸ポケット</label>
+                                <select id="chestPocket_1" name="chestPocket_1">
+                                    <option value="">選択してください</option>
+                                    <option value="barca">バルカポケット</option>
+                                    <option value="box">箱ポケット</option>
+                                    <option value="out">アウトポケット</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="waistPocket_1">腰ポケット</label>
+                                <select id="waistPocket_1" name="waistPocket_1">
+                                    <option value="">選択してください</option>
+                                    <option value="flap">フラップポケット</option>
+                                    <option value="out">アウトポケット</option>
+                                    <option value="double_piping">両玉縁ポケット（フラップなし）</option>
+                                    <option value="change">チェンジポケット</option>
+                                    <option value="hacking">ハッキングポケット</option>
+                                    <option value="hacking_change">ハッキングチェンジP</option>
+                                </select>
                             </div>
                         </div>
                         
@@ -2503,6 +2535,8 @@ function collectFormData() {
             jacketStyle: document.getElementById(`jacketStyle_${itemId}`)?.value || '',
             lining: document.getElementById(`lining_${itemId}`)?.value || '',
             buttons: document.getElementById(`buttons_${itemId}`)?.value || '',
+            chestPocket: document.getElementById(`chestPocket_${itemId}`)?.value || '',
+            waistPocket: document.getElementById(`waistPocket_${itemId}`)?.value || '',
             lapelStyle: document.getElementById(`lapelStyle_${itemId}`)?.value || '',
             cuffStyle: document.getElementById(`cuffStyle_${itemId}`)?.value || '',
             cuffDetails: document.getElementById(`cuffDetails_${itemId}`)?.value || '',
@@ -2907,7 +2941,7 @@ function saveToCSV() {
             'ベスト丈', 'パンツウエスト', '股上', '股下', '太もも周り', '膝周り', 'ふくらはぎ周り',
             '肩傾斜左', '肩傾斜右', '鎌深', 'ストラップ寸', 'オーバーショルダー寸',
             'アイテムNo', 'アイテムタイプ', '生地', '色', 'ジャケットスタイル', '裏地', 'ボタン',
-            '衿型', 'カフス', 'カフス詳細', 'オプション', '価格', '納期', 'アイテム備考',
+            '胸ポケット', '腰ポケット', '衿型', 'カフス', 'カフス詳細', 'オプション', '価格', '納期', 'アイテム備考',
             '小計', '割引率(%)', '割引額', '総額', '支払方法', '内金', '残金', '全体備考', '受注日', '注文番号'
         ];
         
@@ -2969,9 +3003,25 @@ function saveToCSV() {
                 item.itemType || '',
                 item.fabric || '',
                 item.color || '',
-                item.jacketStyle === 'single' ? 'シングル' : item.jacketStyle === 'double' ? 'ダブル' : item.jacketStyle || '',
+                item.jacketStyle === 'single_2x1' ? 'シングル２×１' : 
+                item.jacketStyle === 'single_1x1' ? 'シングル１×１' : 
+                item.jacketStyle === 'single_3x1' ? 'シングル３×１' : 
+                item.jacketStyle === 'double_6x2' ? 'ダブル６×２' : 
+                item.jacketStyle === 'double_4x2' ? 'ダブル４×２' : 
+                item.jacketStyle === 'double_2x1' ? 'ダブル２×１' : item.jacketStyle || '',
                 item.lining || '',
                 item.buttons || '',
+                // 胸ポケット
+                item.chestPocket === 'barca' ? 'バルカポケット' :
+                item.chestPocket === 'box' ? '箱ポケット' :
+                item.chestPocket === 'out' ? 'アウトポケット' : item.chestPocket || '',
+                // 腰ポケット
+                item.waistPocket === 'flap' ? 'フラップポケット' :
+                item.waistPocket === 'out' ? 'アウトポケット' :
+                item.waistPocket === 'double_piping' ? '両玉縁ポケット（フラップなし）' :
+                item.waistPocket === 'change' ? 'チェンジポケット' :
+                item.waistPocket === 'hacking' ? 'ハッキングポケット' :
+                item.waistPocket === 'hacking_change' ? 'ハッキングチェンジP' : item.waistPocket || '',
                 item.lapelStyle || '',
                 item.cuffStyle || '',
                 item.cuffDetails || '',
@@ -3231,6 +3281,14 @@ function loadDataToForm(data) {
                         const buttonsElement = document.getElementById(`buttons_${itemId}`);
                         if (buttonsElement) buttonsElement.value = item.buttons;
                     }
+                    if (item.chestPocket) {
+                        const chestPocketElement = document.getElementById(`chestPocket_${itemId}`);
+                        if (chestPocketElement) chestPocketElement.value = item.chestPocket;
+                    }
+                    if (item.waistPocket) {
+                        const waistPocketElement = document.getElementById(`waistPocket_${itemId}`);
+                        if (waistPocketElement) waistPocketElement.value = item.waistPocket;
+                    }
                     if (item.lapelStyle) {
                         const lapelElement = document.getElementById(`lapelStyle_${itemId}`);
                         if (lapelElement) lapelElement.value = item.lapelStyle;
@@ -3378,8 +3436,16 @@ function addStyleItem() {
                     <label for="jacketStyle_${itemId}">ジャケットスタイル</label>
                     <select id="jacketStyle_${itemId}" name="jacketStyle_${itemId}">
                         <option value="">選択してください</option>
-                        <option value="single">シングル</option>
-                        <option value="double">ダブル</option>
+                        <optgroup label="シングル">
+                            <option value="single_2x1">シングル２×１</option>
+                            <option value="single_1x1">シングル１×１</option>
+                            <option value="single_3x1">シングル３×１</option>
+                        </optgroup>
+                        <optgroup label="ダブル">
+                            <option value="double_6x2">ダブル６×２</option>
+                            <option value="double_4x2">ダブル４×２</option>
+                            <option value="double_2x1">ダブル２×１</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="form-group">
@@ -3389,6 +3455,30 @@ function addStyleItem() {
                 <div class="form-group">
                     <label for="buttons_${itemId}">ボタン</label>
                     <input type="text" id="buttons_${itemId}" name="buttons_${itemId}" placeholder="ボタンの種類・材質">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="chestPocket_${itemId}">胸ポケット</label>
+                    <select id="chestPocket_${itemId}" name="chestPocket_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="barca">バルカポケット</option>
+                        <option value="box">箱ポケット</option>
+                        <option value="out">アウトポケット</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="waistPocket_${itemId}">腰ポケット</label>
+                    <select id="waistPocket_${itemId}" name="waistPocket_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="flap">フラップポケット</option>
+                        <option value="out">アウトポケット</option>
+                        <option value="double_piping">両玉縁ポケット（フラップなし）</option>
+                        <option value="change">チェンジポケット</option>
+                        <option value="hacking">ハッキングポケット</option>
+                        <option value="hacking_change">ハッキングチェンジP</option>
+                    </select>
                 </div>
             </div>
             
