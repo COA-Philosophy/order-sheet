@@ -2709,14 +2709,8 @@ function saveToCSV() {
             ...rows.map(row => 
                 row.map(v => {
                     const str = String(v || '');
-                    
-                    // 電話番号の場合は先頭に'を付けてExcelで文字列として認識させる
-                    if (row === values && headers[row.indexOf(v)] === '電話番号' && str !== '') {
-                        return `"'${str}"`;
-                    }
-                    
                     // 数値の場合はそのまま、文字列の場合は必要に応じてクォート
-                    if (!isNaN(str) && str !== '' && headers[row.indexOf(v)] !== '電話番号') {
+                    if (!isNaN(str) && str !== '') {
                         return str;
                     }
                     // カンマ、改行、ダブルクォートを含む場合はクォートで囲む
