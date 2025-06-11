@@ -2598,8 +2598,6 @@ function autoSaveCurrentCustomer() {
 // 実用的な保存機能
 // =============================================================================
 
-// PDF保存とExcel保存の関数は削除し、CSV保存のみ残す
-
 // データ管理用CSV保存（CRM顧客マスター対応版）
 function saveToCSV() {
     try {
@@ -2615,7 +2613,7 @@ function saveToCSV() {
             '肩傾斜左', '肩傾斜右', '鎌深', 'ストラップ寸', 'オーバーショルダー寸',
             'アイテムNo', 'アイテムタイプ', '生地', '色', 'ジャケットスタイル', '裏地', 'ボタン',
             '衿型', 'カフス', 'カフス詳細', 'オプション', '価格', '納期', 'アイテム備考',
-            '総額', '支払方法', '内金', '残金', '全体備考', '受注日', '注文番号'
+            '小計', '割引率(%)', '割引額', '総額', '支払方法', '内金', '残金', '全体備考', '受注日', '注文番号'
         ];
         
         // 複数アイテムを各行に展開するための配列
@@ -2686,8 +2684,11 @@ function saveToCSV() {
                 item.price || '',
                 item.deliveryDate || '',
                 item.notes || '',
-                // 支払い情報（全行で同じ）
-                formData.totalPrice,
+                // 価格情報（全行で同じ）
+                formData.subtotalPrice || 0, // 小計
+                formData.payment.discountPercent || 0, // 割引率
+                formData.payment.discountAmount || 0, // 割引額
+                formData.totalPrice, // 総額（割引後）
                 formData.payment.method === 'cash' ? '現金' : 
                 formData.payment.method === 'card' ? 'クレジットカード' : 
                 formData.payment.method === 'transfer' ? '銀行振込' : 
