@@ -1177,9 +1177,31 @@ optgroup option {
         margin-top: 3px !important;
     }
     
-    /* ディスカウント部分を1行に */
+    /* ディスカウント部分を印刷用に最適化 */
     .total-section > div[style*="background: #fff3cd"] {
-        display: none !important; /* 割引入力欄は印刷時非表示 */
+        background: none !important;
+        border: none !important;
+        padding: 2px 0 !important;
+        margin-top: 3px !important;
+    }
+    
+    /* 割引入力欄は非表示にして、割引情報のみ表示 */
+    .total-section > div[style*="background: #fff3cd"] > div:first-child {
+        display: none !important; /* 入力欄の行を非表示 */
+    }
+    
+    /* 割引額表示は維持 */
+    .total-section > div[style*="background: #fff3cd"] > div:last-child {
+        margin-top: 0 !important;
+        text-align: left !important;
+        font-size: 8pt !important;
+        font-weight: normal !important;
+    }
+    
+    /* 割引額の表示を調整 */
+    #discountDisplay {
+        font-weight: bold !important;
+        color: #000 !important;
     }
     
     /* 最終価格と内金・残金 */
