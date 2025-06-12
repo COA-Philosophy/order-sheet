@@ -749,19 +749,34 @@ optgroup option {
     }
 }
 
-/* 印刷対応 - A4 1枚に収める 改良版 */
+/* 印刷対応 - モバイル対応改良版 */
 @media print {
+    /* 印刷時の一時的なクラス */
+    .print-page {
+        page-break-after: always;
+        position: relative;
+        height: 297mm;
+        width: 210mm;
+        margin: 0;
+        padding: 10mm;
+        box-sizing: border-box;
+    }
+    
+    .print-page:last-child {
+        page-break-after: auto;
+    }
+    
     /* A4サイズ設定 */
     @page {
         size: A4;
-        margin: 3mm; /* 余白を最小に */
+        margin: 0;
     }
     
     body { 
         margin: 0; 
         background: white;
-        font-size: 6pt !important; /* さらに小さく */
-        line-height: 1.1 !important;
+        font-size: 9pt !important;
+        line-height: 1.4 !important;
     }
     
     .container { 
@@ -770,260 +785,191 @@ optgroup option {
         max-width: none;
         padding: 0;
         width: 100%;
-        max-height: 290mm !important; /* A4の高さ - 余白 */
-        overflow: hidden !important;
+        border-radius: 0;
     }
     
-    /* ヘッダーを極小に */
+    /* ヘッダー */
     .header {
-        margin-bottom: 3px !important;
-        padding-bottom: 2px !important;
-        border-bottom: 1px solid #000;
+        margin-bottom: 10px !important;
+        padding-bottom: 5px !important;
+        border-bottom: 2px solid #2c3e50;
     }
     
     .header h1 {
-        font-size: 10pt !important;
+        font-size: 16pt !important;
         margin: 0 !important;
+        color: #2c3e50 !important;
     }
     
     .header p {
-        font-size: 6pt !important;
-        margin: 0 !important;
+        font-size: 9pt !important;
+        margin: 2px 0 !important;
     }
     
-    /* セクションを超コンパクトに */
+    /* セクション */
     .section {
-        margin-bottom: 2px !important;
+        margin-bottom: 8px !important;
         page-break-inside: avoid !important;
-        border: 0.5px solid #999 !important;
+        border: 1px solid #ccc !important;
     }
     
     .section-title {
-        font-size: 7pt !important;
-        padding: 1px 4px !important;
-        background: #f0f0f0 !important;
-        color: #000 !important;
+        font-size: 11pt !important;
+        padding: 5px 10px !important;
+        background: #2c3e50 !important;
+        color: white !important;
         margin: 0 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
     
     .section-content {
-        padding: 2px 4px !important;
+        padding: 8px !important;
     }
     
-    /* 必須情報セクションを横並びに */
-    .essential-info .section-content {
-        display: block !important;
+    /* 必須情報セクション */
+    .essential-info {
+        border: 2px solid #e74c3c !important;
+    }
+    
+    .essential-info .section-title {
+        background: #e74c3c !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .essential-group {
-        display: inline-block !important;
-        width: 24% !important;
-        vertical-align: top !important;
-        border: none !important;
-        padding: 1px !important;
-        margin: 0 0.5% 2px 0 !important;
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+        margin-bottom: 8px !important;
+        background: #f9f9f9 !important;
     }
     
     .essential-header {
-        display: none !important; /* ヘッダーを非表示 */
+        margin-bottom: 5px !important;
+        padding-bottom: 3px !important;
+        border-bottom: 1px solid #ddd !important;
     }
     
-    /* 名前とフリガナを1行に */
-    .name-inputs,
-    .name-kana {
+    .essential-header h4 {
+        font-size: 10pt !important;
+        font-weight: bold !important;
+    }
+    
+    /* フォーム要素 */
+    .form-row {
         display: flex !important;
-        gap: 3px !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-bottom: 5px !important;
     }
     
-    .name-inputs .form-group,
-    .name-kana .form-group {
-        flex: 1 !important;
-    }
-    
-    /* 生年月日を1行に */
-    .birth-date-inputs {
-        display: flex !important;
-        gap: 2px !important;
-    }
-    
-    /* 住所をコンパクトに */
-    .address-inputs {
-        font-size: 5pt !important;
-    }
-    
-    .postal-row {
-        display: flex !important;
-        gap: 3px !important;
-        margin-bottom: 1px !important;
-    }
-    
-    /* 採寸情報を超コンパクトグリッドに */
-    .measurement-grid {
-        display: grid !important;
-        grid-template-columns: repeat(8, 1fr) !important;
-        gap: 1px !important;
-        font-size: 5pt !important;
-    }
-    
-    /* 採寸セクションのタイトルを非表示 */
-    .section-content h4 {
-        display: none !important;
-    }
-    
-    /* フォーム要素を超コンパクトに */
     .form-group {
-        margin-bottom: 0 !important;
+        margin-bottom: 5px !important;
+        flex: 1 !important;
+        min-width: 80px !important;
     }
     
     .form-group label {
-        font-size: 5pt !important;
-        margin: 0 !important;
-        font-weight: normal !important;
-        line-height: 1 !important;
+        font-size: 8pt !important;
+        margin-bottom: 2px !important;
+        font-weight: bold !important;
+        color: #333 !important;
     }
     
     .form-group input,
     .form-group select,
     .form-group textarea {
         border: none !important;
-        border-bottom: 0.5px solid #999 !important;
-        padding: 0 !important;
-        font-size: 6pt !important;
+        border-bottom: 1px solid #999 !important;
+        padding: 2px !important;
+        font-size: 9pt !important;
         background: none !important;
-        height: 10px !important;
-        line-height: 1 !important;
+        font-weight: normal !important;
+        color: #000 !important;
     }
     
-    /* textareaも1行に */
-    textarea {
-        resize: none !important;
-        height: 10px !important;
-        overflow: hidden !important;
-    }
-    
-    /* 値が入力されている場合 */
-    .form-group input:not(:placeholder-shown),
-    .form-group select:not([value=""]),
-    .form-group textarea:not(:placeholder-shown) {
-        border-bottom: none !important;
+    /* 入力済みフィールド */
+    input:not(:placeholder-shown),
+    select:not([value=""]),
+    textarea:not(:placeholder-shown) {
         font-weight: bold !important;
+        border-bottom: 1px solid #333 !important;
     }
     
-    /* スタイル・仕様を超コンパクトに */
-    .style-item {
-        border: 0.5px solid #666 !important;
-        padding: 1px 2px !important;
-        margin-bottom: 1px !important;
-        background: white !important;
-    }
-    
-    .style-item .form-row {
+    /* 採寸グリッド */
+    .measurement-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 2px !important;
-        margin-bottom: 0 !important;
+        gap: 5px !important;
     }
     
-    .style-item .form-group {
-        margin: 0 !important;
+    /* スタイルアイテム */
+    .style-item {
+        border: 1px solid #999 !important;
+        padding: 8px !important;
+        margin-bottom: 8px !important;
+        background: white !important;
+        page-break-inside: avoid !important;
     }
     
-    .item-header {
-        display: none !important; /* アイテムヘッダーを非表示 */
+    .item-header h5 {
+        font-size: 10pt !important;
+        margin-bottom: 5px !important;
     }
     
-    /* チェックボックスを1行に */
+    /* チェックボックス */
     .checkbox-group {
         display: flex !important;
-        flex-wrap: nowrap !important;
-        gap: 3px !important;
-        font-size: 5pt !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
     }
     
     .checkbox-item {
-        white-space: nowrap !important;
+        font-size: 8pt !important;
     }
     
     .checkbox-item input[type="checkbox"] {
-        width: 6px !important;
-        height: 6px !important;
-        margin-right: 1px !important;
+        width: 10px !important;
+        height: 10px !important;
+        margin-right: 3px !important;
     }
     
-    /* 価格セクションを超コンパクトに */
+    /* 価格セクション */
     .total-section {
-        border: 0.5px solid #000 !important;
-        padding: 2px !important;
-        margin-top: 2px !important;
-    }
-    
-    .total-section h4 {
-        display: none !important;
-    }
-    
-    #priceBreakdown {
-        display: none !important; /* 明細を非表示 */
+        border: 2px solid #333 !important;
+        padding: 8px !important;
+        margin-top: 8px !important;
+        background: #f5f5f5 !important;
     }
     
     .total-row {
-        display: inline !important;
-        margin-right: 5px !important;
-        font-size: 6pt !important;
-    }
-    
-    .total-row span:first-child::after {
-        content: ":" !important;
+        font-size: 9pt !important;
+        margin-bottom: 3px !important;
     }
     
     .total-row.grand-total {
-        font-size: 8pt !important;
+        font-size: 12pt !important;
         font-weight: bold !important;
-        border: none !important;
-        padding: 0 !important;
-        margin-left: 5px !important;
+        border-top: 1px solid #333 !important;
+        padding-top: 5px !important;
+        margin-top: 5px !important;
     }
     
-    /* ディスカウント部分を1行に */
-    .total-section > div[style*="background: #fff3cd"] {
-        display: inline !important;
-        background: none !important;
-        padding: 0 !important;
-        margin: 0 5px !important;
-    }
-    
-    /* 支払い・納期セクションを1行に */
-    #payment-section .form-row {
-        display: flex !important;
-        gap: 5px !important;
-    }
-    
-    #payment-section .form-group {
-        flex: 1 !important;
-    }
-    
-    /* 署名欄を極小に */
+    /* 署名欄 */
     .signature-section {
-        margin-top: 3px !important;
+        margin-top: 10px !important;
         display: flex !important;
         justify-content: space-between !important;
-        gap: 5px !important;
     }
     
     .signature-box {
         width: 48% !important;
-        height: 20px !important;
-        border: 0.5px solid #000 !important;
+        height: 40px !important;
+        border: 1px solid #333 !important;
         text-align: center !important;
-        padding-top: 15px !important;
-        font-size: 5pt !important;
-    }
-    
-    /* 備考欄を最小に */
-    .notes-area {
-        height: 15px !important;
-        font-size: 5pt !important;
+        padding-top: 25px !important;
+        font-size: 8pt !important;
     }
     
     /* 非表示要素 */
@@ -1038,45 +984,56 @@ optgroup option {
     .address-lookup-btn,
     .input-hint,
     .input-guide,
-    .item-count,
     .step-number,
     .check-mark,
-    br, p {
+    .save-btn {
         display: none !important;
     }
     
-    /* 任意情報セクションを横並びに */
-    .section:nth-of-type(2) .form-row {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 3px !important;
+    /* textarea の高さ調整 */
+    textarea {
+        height: 25px !important;
+        resize: none !important;
     }
     
-    /* 長いラベルを短縮 */
-    label {
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
+    .notes-area {
+        height: 40px !important;
     }
     
-    /* 改ページ禁止 */
-    * {
+    /* 改ページ制御 */
+    .section,
+    .style-item,
+    .essential-group {
         page-break-inside: avoid !important;
     }
     
-    /* 空白を完全に除去 */
-    * {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    /* 必要な要素のみ最小限のスペースを確保 */
-    .section {
-        margin-bottom: 2px !important;
-    }
-    
-    .form-group {
-        padding: 0 1px !important;
+    /* モバイル印刷用の追加スタイル */
+    @media (max-width: 768px) {
+        body {
+            font-size: 8pt !important;
+        }
+        
+        .header h1 {
+            font-size: 14pt !important;
+        }
+        
+        .section-title {
+            font-size: 10pt !important;
+        }
+        
+        .form-group label {
+            font-size: 7pt !important;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            font-size: 8pt !important;
+        }
+        
+        .measurement-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
     }
 }
 
@@ -1142,6 +1099,16 @@ select {
 
 .save-section h3 {
     margin-bottom: 20px;
+}
+
+/* 印刷プレビューモード */
+.print-preview-mode {
+    background: white !important;
+}
+
+.print-preview-mode .container {
+    max-width: 210mm !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3) !important;
 }
     </style>
 </head>
@@ -1946,7 +1913,7 @@ select {
     <script>
 // =====================================
 // CRMオーダーシート 完全版JavaScript
-// 衿型・カフス全選択肢対応版
+// モバイル印刷対応版
 // ===================================== 
 
 // 基本設定とグローバル変数
@@ -3928,6 +3895,121 @@ function updateBalance() {
 }
 
 // =============================================================================
+// 印刷・PDF機能（モバイル対応版）
+// =============================================================================
+
+// 印刷プレビュー（改良版）
+function printPreview() {
+    // 印刷前に必須項目をチェック
+    const lastName = document.getElementById('lastName')?.value.trim();
+    const firstName = document.getElementById('firstName')?.value.trim();
+    
+    if (!lastName || !firstName) {
+        showStatusMessage('❌ お客様のお名前を入力してください', 'error');
+        return;
+    }
+    
+    // モバイルデバイスかどうかを判定
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // モバイル用の印刷準備
+        prepareMobilePrint();
+    }
+    
+    // 空の入力欄にプレースホルダーを設定
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="email"]');
+    inputs.forEach(input => {
+        if (!input.value && !input.placeholder) {
+            input.placeholder = '―';
+        }
+    });
+    
+    // セレクトボックスで未選択の場合の処理
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        if (!select.value) {
+            select.style.color = '#ccc';
+        }
+    });
+    
+    showStatusMessage('印刷プレビューを開いています...', 'info');
+    
+    // 印刷ダイアログを開く
+    setTimeout(() => {
+        window.print();
+        
+        // 印刷後にスタイルを元に戻す
+        selects.forEach(select => {
+            select.style.color = '';
+        });
+        
+        // モバイル印刷のクリーンアップ
+        if (isMobile) {
+            cleanupMobilePrint();
+        }
+    }, 500);
+}
+
+// モバイル印刷の準備
+function prepareMobilePrint() {
+    // アイテム数を確認
+    const items = document.querySelectorAll('.style-item');
+    const itemCount = items.length;
+    
+    // アイテムが3個以上の場合はページ分割の準備
+    if (itemCount >= 3) {
+        // 印刷用のスタイルを動的に追加
+        const printStyle = document.createElement('style');
+        printStyle.id = 'mobilePrintStyle';
+        printStyle.innerHTML = `
+            @media print {
+                /* 3個目以降のアイテムは新しいページに */
+                .style-item:nth-child(n+3) {
+                    page-break-before: always;
+                }
+                
+                /* モバイル用の余白調整 */
+                .container {
+                    padding: 5mm !important;
+                }
+                
+                /* フォントサイズの最適化 */
+                body {
+                    font-size: 10pt !important;
+                }
+                
+                .form-group label {
+                    font-size: 9pt !important;
+                }
+                
+                .form-group input,
+                .form-group select,
+                .form-group textarea {
+                    font-size: 10pt !important;
+                }
+            }
+        `;
+        document.head.appendChild(printStyle);
+    }
+    
+    // bodyにモバイル印刷モードクラスを追加
+    document.body.classList.add('mobile-print-mode');
+}
+
+// モバイル印刷のクリーンアップ
+function cleanupMobilePrint() {
+    // 追加したスタイルを削除
+    const printStyle = document.getElementById('mobilePrintStyle');
+    if (printStyle) {
+        printStyle.remove();
+    }
+    
+    // モバイル印刷モードクラスを削除
+    document.body.classList.remove('mobile-print-mode');
+}
+
+// =============================================================================
 // イベントリスナーとエラーハンドリング
 // =============================================================================
 
@@ -3950,60 +4032,17 @@ window.addEventListener('beforeunload', function(e) {
 });
 
 // =============================================================================
-// 印刷・PDF機能
-// =============================================================================
-
-// 印刷プレビュー
-function printPreview() {
-    // 印刷前に必須項目をチェック
-    const lastName = document.getElementById('lastName')?.value.trim();
-    const firstName = document.getElementById('firstName')?.value.trim();
-    
-    if (!lastName || !firstName) {
-        showStatusMessage('❌ お客様のお名前を入力してください', 'error');
-        return;
-    }
-    
-    // 空の入力欄にプレースホルダーを設定（印刷時の見栄えのため）
-    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="email"]');
-    inputs.forEach(input => {
-        if (!input.value && !input.placeholder) {
-            input.placeholder = '―';
-        }
-    });
-    
-    // セレクトボックスで未選択の場合の処理
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-        if (!select.value) {
-            select.style.color = '#ccc';
-        }
-    });
-    
-    showStatusMessage('印刷プレビューを開いています...', 'info');
-    
-    // 少し遅延を入れて印刷ダイアログを開く
-    setTimeout(() => {
-        window.print();
-        
-        // 印刷後にスタイルを元に戻す
-        selects.forEach(select => {
-            select.style.color = '';
-        });
-    }, 500);
-}
-
-// =============================================================================
 // デバッグとログ出力
 // =============================================================================
 
-console.log('=== CRMオーダーシステム V5 完全版 ===');
+console.log('=== CRMオーダーシステム V6 モバイル印刷対応版 ===');
 console.log('初期化完了時刻:', new Date().toISOString());
 console.log('利用可能機能:');
 console.log('- 自動バックアップ（5分ごと）');
-console.log('- PDF/Excel/CSV保存');
+console.log('- PDF/CSV保存');
 console.log('- オフライン対応');
-console.log('- データ保護機能');
+console.log('- モバイル印刷最適化');
+console.log('- ページ分割機能');
 console.log('========================');
     </script>
 </body>
