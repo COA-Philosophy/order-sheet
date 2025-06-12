@@ -751,32 +751,17 @@ optgroup option {
 
 /* 印刷対応 - モバイル対応改良版 */
 @media print {
-    /* 印刷時の一時的なクラス */
-    .print-page {
-        page-break-after: always;
-        position: relative;
-        height: 297mm;
-        width: 210mm;
-        margin: 0;
-        padding: 10mm;
-        box-sizing: border-box;
-    }
-    
-    .print-page:last-child {
-        page-break-after: auto;
-    }
-    
     /* A4サイズ設定 */
     @page {
         size: A4;
-        margin: 0;
+        margin: 10mm;
     }
     
     body { 
         margin: 0; 
         background: white;
-        font-size: 9pt !important;
-        line-height: 1.4 !important;
+        font-size: 8pt !important;
+        line-height: 1.3 !important;
     }
     
     .container { 
@@ -790,186 +775,285 @@ optgroup option {
     
     /* ヘッダー */
     .header {
-        margin-bottom: 10px !important;
-        padding-bottom: 5px !important;
-        border-bottom: 2px solid #2c3e50;
+        margin-bottom: 5px !important;
+        padding-bottom: 3px !important;
+        border-bottom: 1px solid #2c3e50;
+        page-break-after: avoid !important;
     }
     
     .header h1 {
-        font-size: 16pt !important;
+        font-size: 14pt !important;
         margin: 0 !important;
         color: #2c3e50 !important;
     }
     
     .header p {
-        font-size: 9pt !important;
-        margin: 2px 0 !important;
+        font-size: 8pt !important;
+        margin: 1px 0 !important;
     }
     
-    /* セクション */
+    /* セクション共通 */
     .section {
-        margin-bottom: 8px !important;
+        margin-bottom: 5px !important;
         page-break-inside: avoid !important;
-        border: 1px solid #ccc !important;
+        border: 0.5px solid #999 !important;
+        border-radius: 0 !important;
     }
     
     .section-title {
-        font-size: 11pt !important;
-        padding: 5px 10px !important;
-        background: #2c3e50 !important;
-        color: white !important;
+        font-size: 9pt !important;
+        padding: 3px 8px !important;
+        background: #f0f0f0 !important;
+        color: #333 !important;
         margin: 0 !important;
+        border-bottom: 0.5px solid #999 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
     
     .section-content {
-        padding: 8px !important;
+        padding: 5px !important;
     }
     
-    /* 必須情報セクション */
+    /* 必須情報セクション - 1ページ目上部に配置 */
     .essential-info {
-        border: 2px solid #e74c3c !important;
+        border: 1px solid #333 !important;
+        margin-bottom: 5px !important;
     }
     
     .essential-info .section-title {
-        background: #e74c3c !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        background: #333 !important;
+        color: white !important;
+        font-size: 10pt !important;
     }
     
     .essential-group {
-        border: 1px solid #ddd !important;
-        padding: 8px !important;
-        margin-bottom: 8px !important;
-        background: #f9f9f9 !important;
+        display: inline-block !important;
+        width: 48% !important;
+        vertical-align: top !important;
+        border: 0.5px solid #ccc !important;
+        padding: 4px !important;
+        margin: 0 1% 4px 0 !important;
+        background: white !important;
+        box-sizing: border-box !important;
+    }
+    
+    .essential-group:nth-child(even) {
+        margin-right: 0 !important;
     }
     
     .essential-header {
-        margin-bottom: 5px !important;
-        padding-bottom: 3px !important;
-        border-bottom: 1px solid #ddd !important;
+        display: none !important;
     }
     
-    .essential-header h4 {
-        font-size: 10pt !important;
-        font-weight: bold !important;
+    /* 名前とフリガナをコンパクトに */
+    .name-inputs,
+    .name-kana {
+        display: flex !important;
+        gap: 3px !important;
+        margin-bottom: 3px !important;
     }
     
-    /* フォーム要素 */
+    .name-inputs .form-group,
+    .name-kana .form-group {
+        flex: 1 !important;
+        margin-bottom: 2px !important;
+    }
+    
+    /* 生年月日を1行に */
+    .birth-date-inputs {
+        display: flex !important;
+        gap: 2px !important;
+    }
+    
+    .birth-date-inputs .form-group {
+        flex: 1 !important;
+    }
+    
+    /* 住所を超コンパクトに */
+    .address-inputs .form-group {
+        margin-bottom: 2px !important;
+    }
+    
+    .postal-row {
+        margin-bottom: 2px !important;
+    }
+    
+    /* フォーム要素を超コンパクトに */
     .form-row {
         display: flex !important;
         flex-wrap: wrap !important;
-        gap: 8px !important;
-        margin-bottom: 5px !important;
+        gap: 5px !important;
+        margin-bottom: 3px !important;
     }
     
     .form-group {
-        margin-bottom: 5px !important;
+        margin-bottom: 3px !important;
         flex: 1 !important;
-        min-width: 80px !important;
+        min-width: 60px !important;
     }
     
     .form-group label {
-        font-size: 8pt !important;
-        margin-bottom: 2px !important;
-        font-weight: bold !important;
+        font-size: 7pt !important;
+        margin-bottom: 1px !important;
+        font-weight: normal !important;
         color: #333 !important;
+        line-height: 1 !important;
     }
     
     .form-group input,
     .form-group select,
     .form-group textarea {
         border: none !important;
-        border-bottom: 1px solid #999 !important;
-        padding: 2px !important;
-        font-size: 9pt !important;
+        border-bottom: 0.5px solid #999 !important;
+        padding: 1px !important;
+        font-size: 8pt !important;
         background: none !important;
         font-weight: normal !important;
         color: #000 !important;
+        height: 12px !important;
+        line-height: 1 !important;
     }
     
     /* 入力済みフィールド */
     input:not(:placeholder-shown),
-    select:not([value=""]),
+    select:not([value=""]):not([value=""]),
     textarea:not(:placeholder-shown) {
         font-weight: bold !important;
-        border-bottom: 1px solid #333 !important;
+        border-bottom: 0.5px solid #000 !important;
     }
     
-    /* 採寸グリッド */
+    /* 採寸グリッドを超高密度に */
     .measurement-grid {
         display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 5px !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 3px !important;
+        font-size: 7pt !important;
     }
     
-    /* スタイルアイテム */
+    .measurement-grid .form-group {
+        min-width: 40px !important;
+    }
+    
+    /* セクションタイトルを非表示 */
+    h4 {
+        display: none !important;
+    }
+    
+    /* スタイルアイテムを超コンパクトに */
     .style-item {
-        border: 1px solid #999 !important;
-        padding: 8px !important;
-        margin-bottom: 8px !important;
+        border: 0.5px solid #666 !important;
+        padding: 4px !important;
+        margin-bottom: 4px !important;
         background: white !important;
         page-break-inside: avoid !important;
     }
     
-    .item-header h5 {
-        font-size: 10pt !important;
-        margin-bottom: 5px !important;
+    .style-item .form-row {
+        gap: 3px !important;
+        margin-bottom: 2px !important;
     }
     
-    /* チェックボックス */
+    .item-header {
+        margin-bottom: 3px !important;
+        border-bottom: 0.5px solid #ccc !important;
+        padding-bottom: 2px !important;
+    }
+    
+    .item-header h5 {
+        font-size: 9pt !important;
+        margin: 0 !important;
+        font-weight: bold !important;
+    }
+    
+    /* チェックボックスを最小化 */
     .checkbox-group {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 8px !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 2px !important;
+        font-size: 6pt !important;
+        margin-top: 2px !important;
     }
     
     .checkbox-item {
-        font-size: 8pt !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     
     .checkbox-item input[type="checkbox"] {
-        width: 10px !important;
-        height: 10px !important;
-        margin-right: 3px !important;
+        width: 6px !important;
+        height: 6px !important;
+        margin-right: 1px !important;
     }
     
-    /* 価格セクション */
+    /* 価格セクションを超コンパクトに */
     .total-section {
-        border: 2px solid #333 !important;
-        padding: 8px !important;
-        margin-top: 8px !important;
-        background: #f5f5f5 !important;
+        border: 0.5px solid #000 !important;
+        padding: 3px !important;
+        margin-top: 4px !important;
+        background: #f9f9f9 !important;
+        page-break-inside: avoid !important;
+    }
+    
+    .total-section h4 {
+        display: none !important;
+    }
+    
+    #priceBreakdown {
+        font-size: 7pt !important;
+        margin-bottom: 2px !important;
     }
     
     .total-row {
-        font-size: 9pt !important;
-        margin-bottom: 3px !important;
+        font-size: 8pt !important;
+        margin-bottom: 2px !important;
     }
     
     .total-row.grand-total {
-        font-size: 12pt !important;
+        font-size: 10pt !important;
         font-weight: bold !important;
-        border-top: 1px solid #333 !important;
-        padding-top: 5px !important;
-        margin-top: 5px !important;
+        border-top: 0.5px solid #000 !important;
+        padding-top: 2px !important;
+        margin-top: 3px !important;
     }
     
-    /* 署名欄 */
+    /* ディスカウント部分を1行に */
+    .total-section > div[style*="background: #fff3cd"] {
+        display: none !important; /* 割引入力欄は印刷時非表示 */
+    }
+    
+    /* 支払い・納期セクションを1行に */
+    #payment-section .form-row {
+        gap: 3px !important;
+    }
+    
+    #payment-section .form-group {
+        min-width: 50px !important;
+    }
+    
+    /* 署名欄を最小化 */
     .signature-section {
-        margin-top: 10px !important;
+        margin-top: 5px !important;
         display: flex !important;
         justify-content: space-between !important;
+        gap: 5px !important;
+        page-break-inside: avoid !important;
     }
     
     .signature-box {
         width: 48% !important;
-        height: 40px !important;
-        border: 1px solid #333 !important;
+        height: 30px !important;
+        border: 0.5px solid #000 !important;
         text-align: center !important;
-        padding-top: 25px !important;
-        font-size: 8pt !important;
+        padding-top: 20px !important;
+        font-size: 7pt !important;
+    }
+    
+    /* 備考欄を最小に */
+    .notes-area {
+        height: 20px !important;
+        font-size: 7pt !important;
     }
     
     /* 非表示要素 */
@@ -986,53 +1070,77 @@ optgroup option {
     .input-guide,
     .step-number,
     .check-mark,
-    .save-btn {
+    .save-btn,
+    .item-count {
         display: none !important;
     }
     
-    /* textarea の高さ調整 */
+    /* textareaの高さ制限 */
     textarea {
-        height: 25px !important;
+        height: 15px !important;
         resize: none !important;
+        overflow: hidden !important;
     }
     
-    .notes-area {
-        height: 40px !important;
+    /* ページ分割戦略 */
+    /* 1-2アイテム: すべて1ページに収める */
+    /* 3個以上: 基本情報1ページ + アイテム情報を別ページ */
+    
+    /* アイテムが3個以上の場合、スタイルセクションを新しいページに */
+    .style-section-3plus {
+        page-break-before: always !important;
     }
     
-    /* 改ページ制御 */
-    .section,
+    /* 各セクション間の余白を最小化 */
+    * {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* 必要な要素のみ最小限のパディングを追加 */
+    .section-content,
+    .form-group,
     .style-item,
     .essential-group {
-        page-break-inside: avoid !important;
+        padding: 3px !important;
     }
     
-    /* モバイル印刷用の追加スタイル */
+    /* 空白行の削除 */
+    br {
+        display: none !important;
+    }
+    
+    /* モバイル印刷の最適化 */
     @media (max-width: 768px) {
         body {
-            font-size: 8pt !important;
+            font-size: 7pt !important;
         }
         
         .header h1 {
-            font-size: 14pt !important;
+            font-size: 12pt !important;
         }
         
         .section-title {
-            font-size: 10pt !important;
+            font-size: 8pt !important;
         }
         
         .form-group label {
-            font-size: 7pt !important;
+            font-size: 6pt !important;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
-            font-size: 8pt !important;
+            font-size: 7pt !important;
         }
         
         .measurement-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+        }
+        
+        .checkbox-group {
+            grid-template-columns: repeat(2, 1fr) !important;
+            font-size: 5pt !important;
         }
     }
 }
@@ -3912,16 +4020,18 @@ function printPreview() {
     // モバイルデバイスかどうかを判定
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
-    if (isMobile) {
-        // モバイル用の印刷準備
-        prepareMobilePrint();
-    }
+    // アイテム数を確認
+    const items = document.querySelectorAll('.style-item');
+    const itemCount = items.length;
+    
+    // 印刷用の最適化
+    preparePrintLayout(itemCount, isMobile);
     
     // 空の入力欄にプレースホルダーを設定
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="tel"], input[type="email"]');
     inputs.forEach(input => {
         if (!input.value && !input.placeholder) {
-            input.placeholder = '―';
+            input.setAttribute('data-print-placeholder', '―');
         }
     });
     
@@ -3944,69 +4054,158 @@ function printPreview() {
             select.style.color = '';
         });
         
-        // モバイル印刷のクリーンアップ
-        if (isMobile) {
-            cleanupMobilePrint();
-        }
+        inputs.forEach(input => {
+            input.removeAttribute('data-print-placeholder');
+        });
+        
+        // 印刷レイアウトのクリーンアップ
+        cleanupPrintLayout();
     }, 500);
 }
 
-// モバイル印刷の準備
-function prepareMobilePrint() {
-    // アイテム数を確認
-    const items = document.querySelectorAll('.style-item');
-    const itemCount = items.length;
+// 印刷レイアウトの準備
+function preparePrintLayout(itemCount, isMobile) {
+    // 印刷用のスタイルを動的に追加
+    const printStyle = document.createElement('style');
+    printStyle.id = 'dynamicPrintStyle';
     
-    // アイテムが3個以上の場合はページ分割の準備
-    if (itemCount >= 3) {
-        // 印刷用のスタイルを動的に追加
-        const printStyle = document.createElement('style');
-        printStyle.id = 'mobilePrintStyle';
-        printStyle.innerHTML = `
-            @media print {
-                /* 3個目以降のアイテムは新しいページに */
-                .style-item:nth-child(n+3) {
-                    page-break-before: always;
-                }
-                
-                /* モバイル用の余白調整 */
-                .container {
-                    padding: 5mm !important;
-                }
-                
-                /* フォントサイズの最適化 */
-                body {
-                    font-size: 10pt !important;
-                }
-                
-                .form-group label {
-                    font-size: 9pt !important;
-                }
-                
-                .form-group input,
-                .form-group select,
-                .form-group textarea {
-                    font-size: 10pt !important;
-                }
+    let styleContent = `
+        @media print {
+            /* 空の入力欄にプレースホルダーを表示 */
+            input[data-print-placeholder]::after {
+                content: attr(data-print-placeholder);
+                color: #999;
+            }
+            
+            /* ページ余白の最適化 */
+            @page {
+                margin: ${isMobile ? '5mm' : '10mm'};
+            }
+    `;
+    
+    // アイテム数に応じたページ分割戦略
+    if (itemCount <= 2) {
+        // 1-2アイテム: すべてを最大2ページに収める
+        styleContent += `
+            /* 1-2アイテム用の超コンパクトレイアウト */
+            .section {
+                margin-bottom: 3px !important;
+            }
+            
+            .form-group {
+                margin-bottom: 2px !important;
+            }
+            
+            .style-item {
+                margin-bottom: 3px !important;
+                padding: 3px !important;
+            }
+            
+            /* 任意情報セクションを横並びに */
+            .section:nth-of-type(2) .form-row {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 3px !important;
+            }
+            
+            /* 支払い・納期・備考を1ページ目の下部に配置 */
+            #payment-section,
+            .section:last-of-type {
+                page-break-inside: avoid !important;
             }
         `;
-        document.head.appendChild(printStyle);
+    } else if (itemCount >= 3) {
+        // 3個以上: スタイルセクションを2ページ目に
+        styleContent += `
+            /* 3個以上のアイテム用のページ分割 */
+            .section:nth-of-type(4) { /* スタイル・仕様セクション */
+                page-break-before: always !important;
+                margin-top: 0 !important;
+            }
+            
+            /* アイテムごとのページ分割 */
+            .style-item:nth-child(n+3) {
+                page-break-before: auto !important;
+            }
+            
+            /* 5個以上の場合は2個ずつページ分割 */
+            ${itemCount >= 5 ? `
+                .style-item:nth-child(3),
+                .style-item:nth-child(5),
+                .style-item:nth-child(7) {
+                    page-break-before: always !important;
+                }
+            ` : ''}
+        `;
     }
     
-    // bodyにモバイル印刷モードクラスを追加
-    document.body.classList.add('mobile-print-mode');
+    // モバイル用の追加最適化
+    if (isMobile) {
+        styleContent += `
+            /* モバイル印刷の最適化 */
+            body {
+                font-size: 7pt !important;
+            }
+            
+            .section-title {
+                font-size: 8pt !important;
+                padding: 2px 5px !important;
+            }
+            
+            .form-group label {
+                font-size: 6pt !important;
+            }
+            
+            .measurement-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: repeat(2, 1fr) !important;
+                font-size: 5pt !important;
+            }
+            
+            /* 署名欄をより小さく */
+            .signature-box {
+                height: 25px !important;
+                font-size: 6pt !important;
+            }
+        `;
+    }
+    
+    styleContent += `
+        } /* @media print の終了 */
+    `;
+    
+    printStyle.innerHTML = styleContent;
+    document.head.appendChild(printStyle);
+    
+    // bodyに印刷モードクラスを追加
+    document.body.classList.add('print-mode');
+    
+    // スタイル・仕様セクションにアイテム数クラスを追加
+    const styleSection = document.querySelector('.section:has(#styleItemsContainer)');
+    if (styleSection && itemCount >= 3) {
+        styleSection.classList.add('style-section-3plus');
+    }
 }
 
-// モバイル印刷のクリーンアップ
-function cleanupMobilePrint() {
+// 印刷レイアウトのクリーンアップ
+function cleanupPrintLayout() {
     // 追加したスタイルを削除
-    const printStyle = document.getElementById('mobilePrintStyle');
+    const printStyle = document.getElementById('dynamicPrintStyle');
     if (printStyle) {
         printStyle.remove();
     }
     
-    // モバイル印刷モードクラスを削除
-    document.body.classList.remove('mobile-print-mode');
+    // 印刷モードクラスを削除
+    document.body.classList.remove('print-mode');
+    
+    // スタイルセクションのクラスを削除
+    const styleSection = document.querySelector('.style-section-3plus');
+    if (styleSection) {
+        styleSection.classList.remove('style-section-3plus');
+    }
 }
 
 // =============================================================================
