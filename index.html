@@ -940,30 +940,179 @@ optgroup option {
         display: none !important;
     }
     
-    /* スタイルアイテムを超コンパクトに */
+    /* =================================
+       スタイルアイテムの横並び改善
+       ================================= */
     .style-item {
         border: 0.5px solid #666 !important;
-        padding: 4px !important;
+        padding: 3px !important;
         margin-bottom: 4px !important;
         background: white !important;
         page-break-inside: avoid !important;
     }
     
+    /* アイテムヘッダーをよりコンパクトに */
+    .style-item .item-header {
+        margin-bottom: 2px !important;
+        padding-bottom: 1px !important;
+        border-bottom: 0.5px solid #ccc !important;
+    }
+    
+    .style-item .item-header h5 {
+        font-size: 8pt !important;
+        margin: 0 !important;
+        font-weight: bold !important;
+    }
+    
+    /* フォーム行を4列グリッドに変更 */
     .style-item .form-row {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
         gap: 3px !important;
         margin-bottom: 2px !important;
     }
     
-    .item-header {
-        margin-bottom: 3px !important;
-        border-bottom: 0.5px solid #ccc !important;
-        padding-bottom: 2px !important;
+    /* フォームグループの最適化 */
+    .style-item .form-group {
+        margin-bottom: 0 !important;
+        min-width: auto !important;
     }
     
-    .item-header h5 {
-        font-size: 9pt !important;
-        margin: 0 !important;
+    /* ラベルを超短縮表示 */
+    .style-item .form-group label {
+        font-size: 5pt !important;
+        margin-bottom: 0 !important;
+        line-height: 1 !important;
         font-weight: bold !important;
+        color: #000 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    
+    /* 特定のラベルを短縮 */
+    .style-item label[for*="itemType_"] { display: none !important; }
+    .style-item label[for*="itemType_"]::after { 
+        content: "タイプ" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="fabric_"] { display: none !important; }
+    .style-item label[for*="fabric_"]::after { 
+        content: "生地" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="color_"] { display: none !important; }
+    .style-item label[for*="color_"]::after { 
+        content: "色" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="jacketStyle_"] { display: none !important; }
+    .style-item label[for*="jacketStyle_"]::after { 
+        content: "Jスタイル" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="lining_"] { display: none !important; }
+    .style-item label[for*="lining_"]::after { 
+        content: "裏地" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="buttons_"] { display: none !important; }
+    .style-item label[for*="buttons_"]::after { 
+        content: "ボタン" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="chestPocket_"] { display: none !important; }
+    .style-item label[for*="chestPocket_"]::after { 
+        content: "胸P" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="waistPocket_"] { display: none !important; }
+    .style-item label[for*="waistPocket_"]::after { 
+        content: "腰P" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="lapelStyle_"] { display: none !important; }
+    .style-item label[for*="lapelStyle_"]::after { 
+        content: "衿型" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="cuffStyle_"] { display: none !important; }
+    .style-item label[for*="cuffStyle_"]::after { 
+        content: "カフス" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="cuffDetails_"] { display: none !important; }
+    .style-item label[for*="cuffDetails_"]::after { 
+        content: "カフス詳細" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="price_"] { display: none !important; }
+    .style-item label[for*="price_"]::after { 
+        content: "価格" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="deliveryDate_"] { display: none !important; }
+    .style-item label[for*="deliveryDate_"]::after { 
+        content: "納期" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="notes_"] { display: none !important; }
+    .style-item label[for*="notes_"]::after { 
+        content: "備考" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    /* 入力フィールドも超コンパクトに */
+    .style-item input,
+    .style-item select,
+    .style-item textarea {
+        font-size: 6pt !important;
+        height: 10px !important;
+        padding: 0 1px !important;
+        line-height: 1 !important;
+        border-bottom: 0.5px solid #999 !important;
+    }
+    
+    /* 価格と納期を同じ行に */
+    .style-item .form-row:last-of-type {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    
+    /* 備考欄を横幅いっぱいに */
+    .style-item .form-group:has(textarea) {
+        grid-column: 1 / -1 !important;
+    }
+    
+    .style-item textarea {
+        height: 15px !important;
+        font-size: 6pt !important;
     }
     
     /* チェックボックスを最小化 */
@@ -985,6 +1134,16 @@ optgroup option {
         width: 6px !important;
         height: 6px !important;
         margin-right: 1px !important;
+    }
+    
+    /* オプションラベルも短縮 */
+    .style-item .checkbox-group > div[style*="width: 100%"] {
+        display: none !important;
+    }
+    
+    /* アイテム間の余白を最小化 */
+    .style-item + .style-item {
+        margin-top: 3px !important;
     }
     
     /* 価格セクションを超コンパクトに */
@@ -1023,7 +1182,7 @@ optgroup option {
         display: none !important; /* 割引入力欄は印刷時非表示 */
     }
     
-    /* 支払い・納期セクションを1行に */
+    /* 最終価格と内金・残金 */
     #payment-section .form-row {
         gap: 3px !important;
     }
