@@ -2354,6 +2354,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (orderNumberElement) {
         orderNumberElement.textContent = orderNo;
     }
+    
+    console.log('初期化時の注文ID:', orderNo); // デバッグ用ログ
 
     // 必須項目機能の初期化
     initializeBirthDateDropdowns();
@@ -2392,7 +2394,9 @@ function generateOrderId() {
     if (isInSandbox()) {
         // サンドボックス環境では単純な連番
         const randomNum = Math.floor(Math.random() * 9999) + 1;
-        return `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
+        const orderId = `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
+        console.log('サンドボックス環境 - 生成された注文ID:', orderId);
+        return orderId;
     }
     
     try {
@@ -2407,13 +2411,17 @@ function generateOrderId() {
         localStorage.setItem(storageKey, counter.toString());
         
         // 注文ID生成
-        return `${dateStr}_SB_${String(counter).padStart(4, '0')}`;
+        const orderId = `${dateStr}_SB_${String(counter).padStart(4, '0')}`;
+        console.log('通常環境 - 生成された注文ID:', orderId, 'カウンター:', counter);
+        return orderId;
         
     } catch (e) {
         console.error('注文ID生成エラー:', e);
         // エラー時はランダム番号
         const randomNum = Math.floor(Math.random() * 9999) + 1;
-        return `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
+        const orderId = `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
+        console.log('エラー時 - 生成された注文ID:', orderId);
+        return orderId;
     }
 }
 
@@ -2804,13 +2812,27 @@ function updateProgressBar(checks) {
     }
 }
 
-// サンドボックス環境チェック
+// サンドボックス環境チェック（強化版）
 function isInSandbox() {
     try {
-        localStorage.setItem('test', 'test');
-        localStorage.removeItem('test');
+        // localStorage の利用可能性をテスト
+        const testKey = 'sandboxTest_' + Date.now();
+        localStorage.setItem(testKey, 'test');
+        localStorage.removeItem(testKey);
+        
+        // Claude.ai環境やサンドボックス環境の追加検出
+        const isClaudeAI = window.location.hostname.includes('claude.ai') || 
+                          window.location.hostname.includes('anthropic') ||
+                          navigator.userAgent.includes('Claude');
+                          
+        if (isClaudeAI) {
+            console.log('Claude.ai環境を検出 - サンドボックスモードで動作');
+            return true;
+        }
+        
         return false;
     } catch (e) {
+        console.log('localStorage利用不可 - サンドボックスモードで動作:', e.message);
         return true;
     }
 }
@@ -2936,8 +2958,11 @@ function collectFormData() {
     const orderNumberElement = document.getElementById('orderNumber');
     const currentDateElement = document.getElementById('currentDate');
     
-    formData.orderNumber = orderNumberElement ? orderNumberElement.textContent : '';
+    // 注文番号を確実に新形式で取得（要素から取得、なければ新規生成）
+    formData.orderNumber = orderNumberElement ? orderNumberElement.textContent : generateOrderId();
     formData.orderDate = currentDateElement ? currentDateElement.textContent : '';
+    
+    console.log('CSV出力用注文ID:', formData.orderNumber); // デバッグ用ログ
     formData.lastName = document.getElementById('lastName')?.value || '';
     formData.firstName = document.getElementById('firstName')?.value || '';
     formData.lastNameKana = document.getElementById('lastNameKana')?.value || '';
@@ -3344,13 +3369,15 @@ function clearForm() {
             birthDateField.value = '';
         }
         
-        // 新しい注文番号を生成
+        // 新しい注文番号を生成（新形式）
         const orderNo = generateOrderId();
         
         const orderNumberElement = document.getElementById('orderNumber');
         if (orderNumberElement) {
             orderNumberElement.textContent = orderNo;
         }
+        
+        console.log('新しい注文ID生成:', orderNo); // デバッグ用ログ
         
         // 現在の顧客IDをクリア
         currentCustomerId = null;
@@ -3556,6 +3583,9 @@ function saveToCSV() {
         
         const customerName = (formData.lastName + formData.firstName) || 'データ';
         const filename = `CRM顧客データ_${customerName}_${dateStr}.csv`;
+        
+        console.log('CSV保存 - 注文ID確認:', formData.orderNumber); // デバッグ用ログ
+        console.log('CSV保存 - ファイル名:', filename); // デバッグ用ログ
         
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
