@@ -3,26 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="オーダーメイドスーツ CRMオーダーシステム - 顧客管理、採寸、価格計算、PDF出力対応">
-    <meta name="keywords" content="オーダーメイドスーツ, CRM, 顧客管理, 採寸, オーダーシート">
-    <meta name="author" content="CRM Order System">
-    
-    <!-- PWA対応 -->
-    <meta name="theme-color" content="#2c3e50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="オーダーシステム">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="オーダーメイドスーツ CRMオーダーシステム">
-    <meta property="og:description" content="顧客管理、採寸データ、価格計算、PDF出力が可能な統合オーダーシステム">
-    <meta property="og:type" content="website">
-    
     <title>オーダーメイドスーツ　オーダーシート</title>
     
     <style>
 /* =====================================
-   CRMオーダーシート 完全版CSS
+   CRMオーダーシート 改善版CSS
    ===================================== */
 
 /* ベースリセット */
@@ -259,18 +244,9 @@ body {
     background: linear-gradient(135deg, #fff5f5, #ffffff);
 }
 
-/* 名前入力エリア */
-.name-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+/* 名前入力エリア（統合版） */
+.name-input {
     margin-bottom: 15px;
-}
-
-.name-kana {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
 }
 
 /* 生年月日入力エリア */
@@ -311,6 +287,12 @@ body {
     color: #7f8c8d;
     margin-top: 5px;
     font-style: italic;
+}
+
+.postal-hint {
+    color: #27ae60;
+    font-size: 12px;
+    margin-left: 10px;
 }
 
 /* 進捗バー */
@@ -483,26 +465,9 @@ body {
     margin-top: 15px;
 }
 
-/* 署名セクション */
-.signature-section {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.signature-box {
-    border: 1px solid #ccc;
-    width: 200px;
-    height: 80px;
-    text-align: center;
-    padding-top: 50px;
-    color: #999;
-    margin-bottom: 20px;
-}
-
+/* 備考エリア（拡大版） */
 .notes-area {
-    height: 100px;
+    height: 150px;
 }
 
 /* ボタン */
@@ -726,19 +691,6 @@ optgroup option {
         min-width: auto;
     }
     
-    .signature-section {
-        flex-direction: column;
-    }
-    
-    .signature-box {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-    
-    .name-inputs, .name-kana {
-        grid-template-columns: 1fr;
-    }
-    
     .birth-date-inputs {
         grid-template-columns: 1fr;
     }
@@ -861,18 +813,9 @@ optgroup option {
         display: none !important;
     }
     
-    /* 名前とフリガナをコンパクトに */
-    .name-inputs,
-    .name-kana {
-        display: flex !important;
-        gap: 3px !important;
+    /* 名前をコンパクトに */
+    .name-input {
         margin-bottom: 3px !important;
-    }
-    
-    .name-inputs .form-group,
-    .name-kana .form-group {
-        flex: 1 !important;
-        margin-bottom: 2px !important;
     }
     
     /* 生年月日を1行に */
@@ -1005,6 +948,91 @@ optgroup option {
         white-space: nowrap !important;
     }
     
+    /* 特定のラベルを短縮 */
+    .style-item label[for*="itemType_"] { display: none !important; }
+    .style-item label[for*="itemType_"]::after { 
+        content: "タイプ" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="fabric_"] { display: none !important; }
+    .style-item label[for*="fabric_"]::after { 
+        content: "生地" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="color_"] { display: none !important; }
+    .style-item label[for*="color_"]::after { 
+        content: "色" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="jacketStyle_"] { display: none !important; }
+    .style-item label[for*="jacketStyle_"]::after { 
+        content: "Jスタイル" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="lining_"] { display: none !important; }
+    .style-item label[for*="lining_"]::after { 
+        content: "裏地" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="buttons_"] { display: none !important; }
+    .style-item label[for*="buttons_"]::after { 
+        content: "ボタン" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="chestPocket_"] { display: none !important; }
+    .style-item label[for*="chestPocket_"]::after { 
+        content: "胸P" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="waistPocket_"] { display: none !important; }
+    .style-item label[for*="waistPocket_"]::after { 
+        content: "腰P" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="lapelStyle_"] { display: none !important; }
+    .style-item label[for*="lapelStyle_"]::after { 
+        content: "衿型" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="price_"] { display: none !important; }
+    .style-item label[for*="price_"]::after { 
+        content: "価格" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="deliveryDate_"] { display: none !important; }
+    .style-item label[for*="deliveryDate_"]::after { 
+        content: "納期" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
+    .style-item label[for*="notes_"] { display: none !important; }
+    .style-item label[for*="notes_"]::after { 
+        content: "備考" !important; 
+        display: block !important;
+        font-size: 5pt !important;
+    }
+    
     /* 入力フィールドも超コンパクトに */
     .style-item input,
     .style-item select,
@@ -1050,6 +1078,11 @@ optgroup option {
         width: 6px !important;
         height: 6px !important;
         margin-right: 1px !important;
+    }
+    
+    /* オプションラベルも短縮 */
+    .style-item .checkbox-group > div[style*="width: 100%"] {
+        display: none !important;
     }
     
     /* アイテム間の余白を最小化 */
@@ -1124,28 +1157,10 @@ optgroup option {
         min-width: 50px !important;
     }
     
-    /* 署名欄を最小化 */
-    .signature-section {
-        margin-top: 5px !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        gap: 5px !important;
-        page-break-inside: avoid !important;
-    }
-    
-    .signature-box {
-        width: 48% !important;
-        height: 30px !important;
-        border: 0.5px solid #000 !important;
-        text-align: center !important;
-        padding-top: 20px !important;
-        font-size: 7pt !important;
-    }
-    
-    /* 備考欄を最小に */
+    /* 備考欄を拡大（サイン欄削除分） */
     .notes-area {
-        height: 20px !important;
-        font-size: 7pt !important;
+        height: 60px !important;
+        font-size: 8pt !important;
     }
     
     /* 非表示要素 */
@@ -1163,20 +1178,38 @@ optgroup option {
     .step-number,
     .check-mark,
     .save-btn,
-    .item-count {
+    .item-count,
+    .postal-hint {
         display: none !important;
     }
     
     /* textareaの高さ制限 */
     textarea {
-        height: 15px !important;
         resize: none !important;
         overflow: hidden !important;
     }
     
+    /* ページ分割戦略 */
+    /* 1-2アイテム: すべて1ページに収める */
+    /* 3個以上: 基本情報1ページ + アイテム情報を別ページ */
+    
     /* アイテムが3個以上の場合、スタイルセクションを新しいページに */
     .style-section-3plus {
         page-break-before: always !important;
+    }
+    
+    /* 各セクション間の余白を最小化 */
+    * {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* 必要な要素のみ最小限のパディングを追加 */
+    .section-content,
+    .form-group,
+    .style-item,
+    .essential-group {
+        padding: 3px !important;
     }
     
     /* 空白行の削除 */
@@ -1293,68 +1326,68 @@ select {
     box-shadow: 0 0 20px rgba(0,0,0,0.3) !important;
 }
 
-/* モーダルダイアログ */
+/* モーダルスタイル（モーダルダイアログ用） */
 .modal-overlay {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: none;
-    z-index: 10000;
-    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
     align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay[style*="display: block"] {
+    display: flex !important;
 }
 
 .modal-content {
     background: white;
+    padding: 0;
     border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     max-width: 500px;
     width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 25px 15px;
-    border-bottom: 1px solid #e0e0e0;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+    position: relative;
 }
 
 .modal-header h3 {
     margin: 0;
-    color: #2c3e50;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background: none;
     border: none;
+    color: white;
     font-size: 24px;
-    color: #999;
     cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.3s;
 }
 
 .modal-close:hover {
-    background: #f0f0f0;
-    color: #666;
+    opacity: 1;
 }
 
 .modal-body {
-    padding: 25px;
+    padding: 20px;
 }
 
 .filename-display {
@@ -1362,12 +1395,13 @@ select {
     border: 2px solid #e9ecef;
     border-radius: 8px;
     padding: 15px;
-    font-family: 'Courier New', monospace;
+    margin-bottom: 15px;
+    font-family: monospace;
     font-size: 14px;
-    margin-bottom: 20px;
+    color: #495057;
     cursor: pointer;
-    transition: all 0.3s ease;
-    word-break: break-all;
+    user-select: all;
+    transition: all 0.3s;
 }
 
 .filename-display:hover {
@@ -1377,110 +1411,84 @@ select {
 
 .copy-button {
     width: 100%;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
     color: white;
     border: none;
+    padding: 12px 20px;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 10px;
 }
 
 .copy-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
 }
 
 .copy-button.copied {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    background: linear-gradient(135deg, #27ae60, #219a52);
 }
 
 .modal-instructions {
+    margin-top: 20px;
+    padding: 15px;
     background: #f8f9fa;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
 }
 
 .modal-instructions h4 {
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0;
     color: #2c3e50;
-    font-size: 16px;
 }
 
 .modal-instructions ol {
     margin: 0;
     padding-left: 20px;
-    color: #555;
-}
-
-.modal-instructions li {
-    margin-bottom: 8px;
-    line-height: 1.5;
+    color: #495057;
+    line-height: 1.8;
 }
 
 .modal-footer {
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
     display: flex;
+    gap: 10px;
     justify-content: flex-end;
-    gap: 15px;
-    padding: 15px 25px 25px;
-    border-top: 1px solid #e0e0e0;
 }
 
 .modal-button {
     padding: 10px 20px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 100px;
-}
-
-.modal-button.secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.modal-button.secondary:hover {
-    background: #5a6268;
+    transition: all 0.3s;
 }
 
 .modal-button.primary {
-    background: linear-gradient(135deg, #28a745, #20c997);
+    background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
 }
 
 .modal-button.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
 }
 
-@media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        margin: 20px;
-    }
-    
-    .modal-header,
-    .modal-body,
-    .modal-footer {
-        padding: 15px 20px;
-    }
-    
-    .modal-footer {
-        flex-direction: column;
-    }
-    
-    .modal-button {
-        width: 100%;
-    }
+.modal-button.secondary {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.modal-button.secondary:hover {
+    background: #dee2e6;
 }
     </style>
 </head>
@@ -1502,31 +1510,21 @@ select {
                     <p>📝 以下の4項目のご入力をお願いいたします。入力完了でチェックマークが表示されます。</p>
                 </div>
                 
-                <!-- お名前 -->
+                <!-- お名前（統合版） -->
                 <div class="essential-group">
                     <div class="essential-header">
                         <span class="step-number">1</span>
                         <h4>お名前</h4>
                         <span class="check-mark" id="nameCheck">✓</span>
                     </div>
-                    <div class="name-inputs">
+                    <div class="name-input">
                         <div class="form-group large-input">
-                            <label for="lastName">姓</label>
-                            <input type="text" id="lastName" name="lastName" placeholder="山田" required autocomplete="family-name" enterkeyhint="next">
-                        </div>
-                        <div class="form-group large-input">
-                            <label for="firstName">名</label>
-                            <input type="text" id="firstName" name="firstName" placeholder="太郎" required autocomplete="given-name" enterkeyhint="next">
-                        </div>
-                    </div>
-                    <div class="name-kana">
-                        <div class="form-group">
-                            <label for="lastNameKana">フリガナ（セイ）</label>
-                            <input type="text" id="lastNameKana" name="lastNameKana" placeholder="ヤマダ" autocomplete="family-name" enterkeyhint="next">
+                            <label for="fullName">お名前</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="山田 太郎" required autocomplete="name" enterkeyhint="next">
                         </div>
                         <div class="form-group">
-                            <label for="firstNameKana">フリガナ（メイ）</label>
-                            <input type="text" id="firstNameKana" name="firstNameKana" placeholder="タロウ" autocomplete="given-name" enterkeyhint="next">
+                            <label for="fullNameKana">フリガナ</label>
+                            <input type="text" id="fullNameKana" name="fullNameKana" placeholder="ヤマダ タロウ" autocomplete="name" enterkeyhint="next">
                         </div>
                     </div>
                 </div>
@@ -1597,8 +1595,8 @@ select {
                     <div class="address-inputs">
                         <div class="postal-row">
                             <div class="form-group">
-                                <label for="postalCode">郵便番号</label>
-                                <input type="text" id="postalCode" name="postalCode" placeholder="123-4567" autocomplete="postal-code" enterkeyhint="next" inputmode="numeric">
+                                <label for="postalCode">郵便番号<span class="postal-hint">✅ ハイフンなしでOK</span></label>
+                                <input type="text" id="postalCode" name="postalCode" placeholder="1234567" autocomplete="postal-code" enterkeyhint="next" inputmode="numeric">
                             </div>
                             <button type="button" class="address-lookup-btn" onclick="lookupAddress()">住所検索</button>
                         </div>
@@ -1678,19 +1676,9 @@ select {
             <div class="section-content">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="email">メールアドレス</label>
-                        <input type="email" id="email" name="email" placeholder="example@email.com" autocomplete="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="lineId">LINE ID</label>
-                        <input type="text" id="lineId" name="lineId" placeholder="@your_line_id">
-                    </div>
-                    <div class="form-group">
                         <label for="referrer">ご紹介者様</label>
                         <input type="text" id="referrer" name="referrer" placeholder="ご紹介いただいた方のお名前">
                     </div>
-                </div>
-                <div class="form-row">
                     <div class="form-group">
                         <label for="gender">性別（任意）</label>
                         <select id="gender" name="gender">
@@ -1810,6 +1798,14 @@ select {
                         <input type="number" id="inseam" name="inseam" step="0.1">
                     </div>
                     <div class="form-group">
+                        <label for="pantTotalLength">パンツ総丈（cm）</label>
+                        <input type="number" id="pantTotalLength" name="pantTotalLength" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="inseamActual">パンツ股下実寸（cm）</label>
+                        <input type="number" id="inseamActual" name="inseamActual" step="0.1">
+                    </div>
+                    <div class="form-group">
                         <label for="thighCircum">太もも周り（cm）</label>
                         <input type="number" id="thighCircum" name="thighCircum" step="0.1">
                     </div>
@@ -1926,12 +1922,52 @@ select {
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="liningType_1">裏地仕様</label>
+                                <select id="liningType_1" name="liningType_1">
+                                    <option value="">選択してください</option>
+                                    <option value="senuki">背抜き</option>
+                                    <option value="soura">総裏</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="lining_1">裏地</label>
                                 <input type="text" id="lining_1" name="lining_1" placeholder="裏地の種類・色">
                             </div>
                             <div class="form-group">
                                 <label for="buttons_1">ボタン</label>
                                 <input type="text" id="buttons_1" name="buttons_1" placeholder="ボタンの種類・材質">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jacketFit_1">ジャケットフィット</label>
+                                <select id="jacketFit_1" name="jacketFit_1">
+                                    <option value="">選択してください</option>
+                                    <option value="tight">タイトフィット</option>
+                                    <option value="basic">ベーシックフィット</option>
+                                    <option value="loose">ルーズフィット</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pantsFit_1">パンツフィット</label>
+                                <select id="pantsFit_1" name="pantsFit_1">
+                                    <option value="">選択してください</option>
+                                    <option value="tight">タイトフィット</option>
+                                    <option value="basic">ベーシックフィット</option>
+                                    <option value="loose">ルーズフィット</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pantsShape_1">パンツ形状</label>
+                                <select id="pantsShape_1" name="pantsShape_1">
+                                    <option value="">選択してください</option>
+                                    <option value="tapered">テーパード</option>
+                                    <option value="straight">ストレート</option>
+                                    <option value="wide">ワイド</option>
+                                    <option value="slight_flare">少しフレア</option>
+                                    <option value="flare">フレア</option>
+                                </select>
                             </div>
                         </div>
                         
@@ -1989,6 +2025,27 @@ select {
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="lapelWidth_1">衿幅</label>
+                                <select id="lapelWidth_1" name="lapelWidth_1">
+                                    <option value="">選択してください</option>
+                                    <option value="5">5cm</option>
+                                    <option value="5.5">5.5cm</option>
+                                    <option value="6">6cm</option>
+                                    <option value="6.5">6.5cm</option>
+                                    <option value="7">7cm</option>
+                                    <option value="7.5">7.5cm</option>
+                                    <option value="8">8cm</option>
+                                    <option value="8.5">8.5cm</option>
+                                    <option value="9">9cm</option>
+                                    <option value="9.5">9.5cm</option>
+                                    <option value="10">10cm</option>
+                                    <option value="10.5">10.5cm</option>
+                                    <option value="11">11cm</option>
+                                    <option value="11.5">11.5cm</option>
+                                    <option value="12">12cm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="cuffStyle_1">カフス（袖口）</label>
                                 <select id="cuffStyle_1" name="cuffStyle_1">
                                     <option value="">選択してください</option>
@@ -2012,10 +2069,6 @@ select {
                                         <option value="arrow">アロー</option>
                                     </optgroup>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="cuffDetails_1">カフス詳細</label>
-                                <input type="text" id="cuffDetails_1" name="cuffDetails_1" placeholder="ボタンホール色、ステッチ等">
                             </div>
                         </div>
                         
@@ -2056,6 +2109,14 @@ select {
                                 <div class="checkbox-item">
                                     <input type="checkbox" id="lining_c_1" name="options_1" data-price="17000" onchange="updateTotalPrice()">
                                     <label for="lining_c_1">有料裏地C (¥17,000)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hiromikaeshi_1" name="options_1" data-price="3500" onchange="updateTotalPrice()">
+                                    <label for="hiromikaeshi_1">広見返し (¥3,500)</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="odaiba_1" name="options_1" data-price="2500" onchange="updateTotalPrice()">
+                                    <label for="odaiba_1">お台場 (¥2,500)</label>
                                 </div>
                                 
                                 <div style="width: 100%; margin: 10px 0;">
@@ -2231,17 +2292,6 @@ select {
                     <label for="generalNotes">全般備考</label>
                     <textarea id="generalNotes" name="generalNotes" class="notes-area" placeholder="特別な要望、注意事項、その他"></textarea>
                 </div>
-                
-                <div class="signature-section">
-                    <div>
-                        <p style="margin-bottom: 10px; font-weight: bold;">お客様サイン</p>
-                        <div class="signature-box">お客様署名欄</div>
-                    </div>
-                    <div>
-                        <p style="margin-bottom: 10px; font-weight: bold;">担当者サイン</p>
-                        <div class="signature-box">担当者署名欄</div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -2318,8 +2368,7 @@ select {
 
     <script>
 // =====================================
-// CRMオーダーシート 完全版JavaScript
-// モバイル印刷対応版
+// CRMオーダーシート 改善版JavaScript
 // ===================================== 
 
 // 基本設定とグローバル変数
@@ -2347,21 +2396,21 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDateElement.textContent = dateStr;
     }
     
-    // 新形式の注文ID生成（YYYYMMDD_SB_XXXX）
-    const orderNo = generateOrderId();
+    const orderNo = 'ORD' + now.getFullYear() + 
+                   String(now.getMonth() + 1).padStart(2, '0') + 
+                   String(now.getDate()).padStart(2, '0') + 
+                   String(Math.floor(Math.random() * 1000)).padStart(3, '0');
     
     const orderNumberElement = document.getElementById('orderNumber');
     if (orderNumberElement) {
         orderNumberElement.textContent = orderNo;
     }
-    
-    console.log('初期化時の注文ID:', orderNo); // デバッグ用ログ
 
     // 必須項目機能の初期化
     initializeBirthDateDropdowns();
     setupRealTimeValidation();
     setupKanaAutoGeneration();
-    setupMobileNavigation(); // モバイルナビゲーション追加
+    setupMobileNavigation();
     
     // 基本機能の初期化
     updateItemCount();
@@ -2380,50 +2429,6 @@ document.addEventListener('DOMContentLoaded', function() {
     showStatusMessage('システムが初期化されました。', 'info');
     console.log('初期化完了');
 });
-
-// =============================================================================
-// 注文ID生成機能
-// =============================================================================
-
-function generateOrderId() {
-    const now = new Date();
-    const dateStr = now.getFullYear() + 
-                   String(now.getMonth() + 1).padStart(2, '0') + 
-                   String(now.getDate()).padStart(2, '0');
-    
-    if (isInSandbox()) {
-        // サンドボックス環境では単純な連番
-        const randomNum = Math.floor(Math.random() * 9999) + 1;
-        const orderId = `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
-        console.log('サンドボックス環境 - 生成された注文ID:', orderId);
-        return orderId;
-    }
-    
-    try {
-        // localStorageから当日の最終番号を取得
-        const storageKey = `orderCounter_${dateStr}`;
-        let counter = parseInt(localStorage.getItem(storageKey) || '0');
-        
-        // 連番を増加
-        counter++;
-        
-        // localStorageに保存
-        localStorage.setItem(storageKey, counter.toString());
-        
-        // 注文ID生成
-        const orderId = `${dateStr}_SB_${String(counter).padStart(4, '0')}`;
-        console.log('通常環境 - 生成された注文ID:', orderId, 'カウンター:', counter);
-        return orderId;
-        
-    } catch (e) {
-        console.error('注文ID生成エラー:', e);
-        // エラー時はランダム番号
-        const randomNum = Math.floor(Math.random() * 9999) + 1;
-        const orderId = `${dateStr}_SB_${String(randomNum).padStart(4, '0')}`;
-        console.log('エラー時 - 生成された注文ID:', orderId);
-        return orderId;
-    }
-}
 
 // =============================================================================
 // ステータスメッセージ機能
@@ -2642,17 +2647,10 @@ function updateBirthDateField() {
 }
 
 function setupRealTimeValidation() {
-    const lastNameField = document.getElementById('lastName');
-    const firstNameField = document.getElementById('firstName');
-    
-    if (lastNameField) {
-        lastNameField.addEventListener('input', function() {
-            validateField(this, 'nameCheck');
-        });
-    }
-    
-    if (firstNameField) {
-        firstNameField.addEventListener('input', function() {
+    // 統合名前フィールドのバリデーション
+    const fullNameField = document.getElementById('fullName');
+    if (fullNameField) {
+        fullNameField.addEventListener('input', function() {
             validateField(this, 'nameCheck');
         });
     }
@@ -2741,9 +2739,8 @@ function checkEssentialFields() {
 }
 
 function checkNameComplete() {
-    const lastName = document.getElementById('lastName')?.value.trim() || '';
-    const firstName = document.getElementById('firstName')?.value.trim() || '';
-    return lastName.length > 0 && firstName.length > 0;
+    const fullName = document.getElementById('fullName')?.value.trim() || '';
+    return fullName.length > 0;
 }
 
 function checkPhoneComplete() {
@@ -2812,27 +2809,13 @@ function updateProgressBar(checks) {
     }
 }
 
-// サンドボックス環境チェック（強化版）
+// サンドボックス環境チェック
 function isInSandbox() {
     try {
-        // localStorage の利用可能性をテスト
-        const testKey = 'sandboxTest_' + Date.now();
-        localStorage.setItem(testKey, 'test');
-        localStorage.removeItem(testKey);
-        
-        // Claude.ai環境やサンドボックス環境の追加検出
-        const isClaudeAI = window.location.hostname.includes('claude.ai') || 
-                          window.location.hostname.includes('anthropic') ||
-                          navigator.userAgent.includes('Claude');
-                          
-        if (isClaudeAI) {
-            console.log('Claude.ai環境を検出 - サンドボックスモードで動作');
-            return true;
-        }
-        
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
         return false;
     } catch (e) {
-        console.log('localStorage利用不可 - サンドボックスモードで動作:', e.message);
         return true;
     }
 }
@@ -2852,7 +2835,7 @@ function lookupAddress() {
     const cleanPostalCode = postalCode.replace(/[^0-9]/g, '');
     
     if (cleanPostalCode.length !== 7) {
-        showStatusMessage('正しい郵便番号を入力してください（例：123-4567）', 'error');
+        showStatusMessage('正しい郵便番号を入力してください（7桁）', 'error');
         return;
     }
     
@@ -2904,23 +2887,13 @@ function lookupAddress() {
 function setupKanaAutoGeneration() {
     let kanaTimeout;
     
-    const lastNameField = document.getElementById('lastName');
-    const firstNameField = document.getElementById('firstName');
+    const fullNameField = document.getElementById('fullName');
     
-    if (lastNameField) {
-        lastNameField.addEventListener('input', function() {
+    if (fullNameField) {
+        fullNameField.addEventListener('input', function() {
             clearTimeout(kanaTimeout);
             kanaTimeout = setTimeout(() => {
-                generateKana(this.value, 'lastNameKana');
-            }, 1000);
-        });
-    }
-    
-    if (firstNameField) {
-        firstNameField.addEventListener('input', function() {
-            clearTimeout(kanaTimeout);
-            kanaTimeout = setTimeout(() => {
-                generateKana(this.value, 'firstNameKana');
+                generateKana(this.value, 'fullNameKana');
             }, 1000);
         });
     }
@@ -2930,7 +2903,9 @@ function generateKana(name, targetId) {
     const kanaMap = {
         '田': 'ダ', '中': 'ナカ', '山': 'ヤマ', '佐': 'サ', '藤': 'トウ',
         '太': 'タ', '郎': 'ロウ', '花': 'ハナ', '子': 'コ', '美': 'ミ',
-        '和': 'ワ', '雄': 'オ', '明': 'アキ', '博': 'ヒロ', '健': 'ケン'
+        '和': 'ワ', '雄': 'オ', '明': 'アキ', '博': 'ヒロ', '健': 'ケン',
+        '木': 'キ', '村': 'ムラ', '上': 'ウエ', '下': 'シタ', '川': 'カワ',
+        '井': 'イ', '林': 'ハヤシ', '森': 'モリ', '原': 'ハラ', '野': 'ノ'
     };
     
     const targetField = document.getElementById(targetId);
@@ -2947,7 +2922,51 @@ function generateKana(name, targetId) {
 }
 
 // =============================================================================
-// データ収集機能
+// 姓名分割ユーティリティ（互換性用）
+// =============================================================================
+
+function parseFullName(fullName) {
+    if (!fullName) return { lastName: '', firstName: '' };
+    
+    // 全角・半角スペースで分割
+    const parts = fullName.trim().split(/[　\s]+/);
+    
+    if (parts.length >= 2) {
+        return {
+            lastName: parts[0],
+            firstName: parts.slice(1).join(' ')
+        };
+    }
+    
+    // スペースがない場合、2文字目で分割を試みる
+    if (fullName.length >= 2) {
+        // 一般的な姓の文字数パターンで判定
+        const commonLastNameLengths = [1, 2, 3];
+        for (let len of commonLastNameLengths) {
+            if (fullName.length > len) {
+                const possibleLastName = fullName.substring(0, len);
+                const possibleFirstName = fullName.substring(len);
+                
+                // 2文字姓を優先
+                if (len === 2) {
+                    return {
+                        lastName: possibleLastName,
+                        firstName: possibleFirstName
+                    };
+                }
+            }
+        }
+    }
+    
+    // デフォルトは全体を姓とする
+    return {
+        lastName: fullName,
+        firstName: ''
+    };
+}
+
+// =============================================================================
+// データ収集機能（改善版）
 // =============================================================================
 
 function collectFormData() {
@@ -2958,15 +2977,22 @@ function collectFormData() {
     const orderNumberElement = document.getElementById('orderNumber');
     const currentDateElement = document.getElementById('currentDate');
     
-    // 注文番号を確実に新形式で取得（要素から取得、なければ新規生成）
-    formData.orderNumber = orderNumberElement ? orderNumberElement.textContent : generateOrderId();
+    formData.orderNumber = orderNumberElement ? orderNumberElement.textContent : '';
     formData.orderDate = currentDateElement ? currentDateElement.textContent : '';
     
-    console.log('CSV出力用注文ID:', formData.orderNumber); // デバッグ用ログ
-    formData.lastName = document.getElementById('lastName')?.value || '';
-    formData.firstName = document.getElementById('firstName')?.value || '';
-    formData.lastNameKana = document.getElementById('lastNameKana')?.value || '';
-    formData.firstNameKana = document.getElementById('firstNameKana')?.value || '';
+    // 統合名前フィールドから取得し、互換性のために分割も保存
+    const fullName = document.getElementById('fullName')?.value || '';
+    const fullNameKana = document.getElementById('fullNameKana')?.value || '';
+    const nameParts = parseFullName(fullName);
+    const kanaParts = parseFullName(fullNameKana);
+    
+    formData.fullName = fullName;
+    formData.fullNameKana = fullNameKana;
+    formData.lastName = nameParts.lastName;
+    formData.firstName = nameParts.firstName;
+    formData.lastNameKana = kanaParts.lastName;
+    formData.firstNameKana = kanaParts.firstName;
+    
     formData.birthDate = document.getElementById('birthDate')?.value || '';
     formData.gender = document.getElementById('gender')?.value || '';
     formData.occupation = document.getElementById('occupation')?.value || '';
@@ -2975,8 +3001,6 @@ function collectFormData() {
     formData.prefecture = document.getElementById('prefecture')?.value || '';
     formData.address = document.getElementById('address')?.value || '';
     formData.phone = document.getElementById('phone')?.value || '';
-    formData.email = document.getElementById('email')?.value || '';
-    formData.lineId = document.getElementById('lineId')?.value || '';
     formData.referrer = document.getElementById('referrer')?.value || '';
     
     formData.measurements = {
@@ -2999,6 +3023,8 @@ function collectFormData() {
         pantWaist: document.getElementById('pantWaist')?.value || '',
         crotchDepth: document.getElementById('crotchDepth')?.value || '',
         inseam: document.getElementById('inseam')?.value || '',
+        pantTotalLength: document.getElementById('pantTotalLength')?.value || '',
+        inseamActual: document.getElementById('inseamActual')?.value || '',
         thighCircum: document.getElementById('thighCircum')?.value || '',
         kneeCircum: document.getElementById('kneeCircum')?.value || '',
         calfCircum: document.getElementById('calfCircum')?.value || '',
@@ -3034,13 +3060,17 @@ function collectFormData() {
             fabric: document.getElementById(`fabric_${itemId}`)?.value || '',
             color: document.getElementById(`color_${itemId}`)?.value || '',
             jacketStyle: document.getElementById(`jacketStyle_${itemId}`)?.value || '',
+            liningType: document.getElementById(`liningType_${itemId}`)?.value || '',
             lining: document.getElementById(`lining_${itemId}`)?.value || '',
             buttons: document.getElementById(`buttons_${itemId}`)?.value || '',
+            jacketFit: document.getElementById(`jacketFit_${itemId}`)?.value || '',
+            pantsFit: document.getElementById(`pantsFit_${itemId}`)?.value || '',
+            pantsShape: document.getElementById(`pantsShape_${itemId}`)?.value || '',
             chestPocket: document.getElementById(`chestPocket_${itemId}`)?.value || '',
             waistPocket: document.getElementById(`waistPocket_${itemId}`)?.value || '',
             lapelStyle: document.getElementById(`lapelStyle_${itemId}`)?.value || '',
+            lapelWidth: document.getElementById(`lapelWidth_${itemId}`)?.value || '',
             cuffStyle: document.getElementById(`cuffStyle_${itemId}`)?.value || '',
-            cuffDetails: document.getElementById(`cuffDetails_${itemId}`)?.value || '',
             options: options,
             optionPrices: optionPrices,
             price: parseInt(document.getElementById(`price_${itemId}`)?.value) || 0,
@@ -3097,6 +3127,7 @@ function updateCurrentCustomer() {
         // 顧客リストの基本情報も更新
         const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
         if (customers[currentCustomerId]) {
+            customers[currentCustomerId].fullName = formData.fullName;
             customers[currentCustomerId].lastName = formData.lastName;
             customers[currentCustomerId].firstName = formData.firstName;
             customers[currentCustomerId].savedDate = new Date().toISOString();
@@ -3106,26 +3137,12 @@ function updateCurrentCustomer() {
         // リストを更新
         loadCustomerList();
         
-        showStatusMessage(`✅ ${formData.lastName} ${formData.firstName}様のデータを更新しました`, 'success');
+        showStatusMessage(`✅ ${formData.fullName}様のデータを更新しました`, 'success');
         
     } catch (error) {
         console.error('顧客更新エラー:', error);
         showStatusMessage('❌ 顧客データの更新に失敗しました', 'error');
     }
-}
-
-// デバッグ用：ローカルストレージの内容を確認
-function debugStorage() {
-    console.log('=== LocalStorage Debug ===');
-    console.log('顧客リスト:', localStorage.getItem('customerList'));
-    
-    const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
-    Object.keys(customers).forEach(customerId => {
-        console.log(`顧客ID: ${customerId}`);
-        console.log(`リスト情報:`, customers[customerId]);
-        console.log(`詳細データ:`, localStorage.getItem(`customer_${customerId}`));
-    });
-    console.log('========================');
 }
 
 // =============================================================================
@@ -3157,7 +3174,8 @@ function loadCustomerList() {
                 const option = document.createElement('option');
                 option.value = customerId;
                 const savedDate = customer.savedDate ? new Date(customer.savedDate).toLocaleDateString('ja-JP') : '';
-                option.textContent = `${customer.lastName} ${customer.firstName} (${savedDate})`;
+                const displayName = customer.fullName || `${customer.lastName} ${customer.firstName}`;
+                option.textContent = `${displayName} (${savedDate})`;
                 selectElement.appendChild(option);
             });
             
@@ -3167,14 +3185,6 @@ function loadCustomerList() {
             }
         }
         
-        // デバッグ用
-        console.log('顧客リスト:', customers);
-        console.log('保存されている顧客データ:');
-        Object.keys(customers).forEach(id => {
-            const data = localStorage.getItem(`customer_${id}`);
-            console.log(`customer_${id}:`, data ? 'データあり' : 'データなし');
-        });
-        
     } catch (e) {
         console.error('顧客リスト読み込みエラー:', e);
     }
@@ -3182,10 +3192,9 @@ function loadCustomerList() {
 
 // 新規顧客として保存
 function saveAsNewCustomer() {
-    const lastName = document.getElementById('lastName')?.value.trim();
-    const firstName = document.getElementById('firstName')?.value.trim();
+    const fullName = document.getElementById('fullName')?.value.trim();
     
-    if (!lastName || !firstName) {
+    if (!fullName) {
         showStatusMessage('❌ お名前を入力してください', 'error');
         return;
     }
@@ -3209,6 +3218,7 @@ function saveAsNewCustomer() {
         // 顧客リストに基本情報を追加
         customers[customerId] = {
             customerId: customerId,
+            fullName: formData.fullName,
             lastName: formData.lastName,
             firstName: formData.firstName,
             orderNumber: formData.orderNumber,
@@ -3224,12 +3234,6 @@ function saveAsNewCustomer() {
         // 現在の顧客IDを更新
         currentCustomerId = customerId;
         
-        // デバッグ用ログ
-        console.log('保存した顧客ID:', customerId);
-        console.log('保存したデータ:', formData);
-        const savedData = localStorage.getItem(`customer_${customerId}`);
-        console.log('確認 - 保存されたデータ:', savedData ? 'OK' : 'NG');
-        
         // リストを更新
         loadCustomerList();
         
@@ -3239,7 +3243,7 @@ function saveAsNewCustomer() {
             selectElement.value = customerId;
         }
         
-        showStatusMessage(`✅ ${lastName} ${firstName}様のデータを保存しました`, 'success');
+        showStatusMessage(`✅ ${fullName}様のデータを保存しました`, 'success');
         
     } catch (error) {
         console.error('顧客保存エラー:', error);
@@ -3272,10 +3276,9 @@ function loadCustomerData() {
         const data = JSON.parse(customerData);
         
         // 現在のデータがある場合は確認
-        const lastName = document.getElementById('lastName')?.value;
-        const firstName = document.getElementById('firstName')?.value;
+        const fullName = document.getElementById('fullName')?.value;
         
-        if (lastName || firstName) {
+        if (fullName) {
             if (!confirm('現在の入力内容は失われます。続行しますか？')) {
                 return;
             }
@@ -3285,11 +3288,8 @@ function loadCustomerData() {
         loadDataToForm(data);
         currentCustomerId = customerId;
         
-        // デバッグ用ログ
-        console.log('読み込んだデータ:', data);
-        console.log('現在の顧客ID:', currentCustomerId);
-        
-        showStatusMessage(`✅ ${data.lastName} ${data.firstName}様のデータを読み込みました`, 'success');
+        const displayName = data.fullName || `${data.lastName} ${data.firstName}`;
+        showStatusMessage(`✅ ${displayName}様のデータを読み込みました`, 'success');
         
     } catch (error) {
         console.error('顧客データ読み込みエラー:', error);
@@ -3316,24 +3316,27 @@ function deleteCustomerData() {
         const customers = JSON.parse(localStorage.getItem('customerList') || '{}');
         const customer = customers[customerId];
         
-        if (customer && confirm(`${customer.lastName} ${customer.firstName}様のデータを削除しますか？\nこの操作は取り消せません。`)) {
-            // 顧客リストから削除
-            delete customers[customerId];
-            localStorage.setItem('customerList', JSON.stringify(customers));
-            
-            // 個別データも削除
-            localStorage.removeItem(`customer_${customerId}`);
-            
-            // 現在編集中の顧客の場合はクリア
-            if (currentCustomerId === customerId) {
-                currentCustomerId = null;
-                clearForm();
+        if (customer) {
+            const displayName = customer.fullName || `${customer.lastName} ${customer.firstName}`;
+            if (confirm(`${displayName}様のデータを削除しますか？\nこの操作は取り消せません。`)) {
+                // 顧客リストから削除
+                delete customers[customerId];
+                localStorage.setItem('customerList', JSON.stringify(customers));
+                
+                // 個別データも削除
+                localStorage.removeItem(`customer_${customerId}`);
+                
+                // 現在編集中の顧客の場合はクリア
+                if (currentCustomerId === customerId) {
+                    currentCustomerId = null;
+                    clearForm();
+                }
+                
+                // リストを更新
+                loadCustomerList();
+                
+                showStatusMessage(`✅ ${displayName}様のデータを削除しました`, 'success');
             }
-            
-            // リストを更新
-            loadCustomerList();
-            
-            showStatusMessage(`✅ ${customer.lastName} ${customer.firstName}様のデータを削除しました`, 'success');
         }
     } catch (error) {
         console.error('顧客削除エラー:', error);
@@ -3369,15 +3372,17 @@ function clearForm() {
             birthDateField.value = '';
         }
         
-        // 新しい注文番号を生成（新形式）
-        const orderNo = generateOrderId();
+        // 新しい注文番号を生成
+        const now = new Date();
+        const orderNo = 'ORD' + now.getFullYear() + 
+                       String(now.getMonth() + 1).padStart(2, '0') + 
+                       String(now.getDate()).padStart(2, '0') + 
+                       String(Math.floor(Math.random() * 1000)).padStart(3, '0');
         
         const orderNumberElement = document.getElementById('orderNumber');
         if (orderNumberElement) {
             orderNumberElement.textContent = orderNo;
         }
-        
-        console.log('新しい注文ID生成:', orderNo); // デバッグ用ログ
         
         // 現在の顧客IDをクリア
         currentCustomerId = null;
@@ -3432,17 +3437,19 @@ function saveToCSV() {
     try {
         const formData = collectFormData();
         
-        // Google Sheets顧客マスターの列順に合わせたヘッダー（アイテム情報を拡張）
+        // Google Sheets顧客マスターの列順に合わせたヘッダー（改善版）
         const headers = [
             '顧客ID', '姓', '名', 'フリガナ（姓）', 'フリガナ（名）', '生年月日', '性別', '職業',
-            '郵便番号', '都道府県', '住所', '電話番号', 'メールアドレス', 'LINE_ID', '紹介者',
+            '郵便番号', '都道府県', '住所', '電話番号', '紹介者',
             '身長', '体重', '胸囲', 'ウエスト', 'ヒップ', '肩幅', '上着丈', '首回り',
             '袖丈左', '袖丈右', '裄丈', 'AH', '二の腕周り', '肘周り', '手首周り',
-            'ベスト丈', 'パンツウエスト', '股上', '股下', '太もも周り', '膝周り', 'ふくらはぎ周り',
+            'ベスト丈', 'パンツウエスト', '股上', '股下', 'パンツ総丈', 'パンツ股下実寸',
+            '太もも周り', '膝周り', 'ふくらはぎ周り',
             '肩傾斜左', '肩傾斜右', '鎌深', 'ストラップ寸', 'オーバーショルダー寸',
-            'アイテムNo', 'アイテムタイプ', '生地', '色', 'ジャケットスタイル', '裏地', 'ボタン',
-            '胸ポケット', '腰ポケット', '衿型', 'カフス', 'カフス詳細', 'オプション', '価格', '納期', 'アイテム備考',
-            '小計', '割引率(%)', '割引額', '総額', '支払方法', '内金', '残金', '全体備考', '受注日', '注文ID'
+            'アイテムNo', 'アイテムタイプ', '生地', '色', 'ジャケットスタイル', '裏地仕様', '裏地', 'ボタン',
+            'ジャケットフィット', 'パンツフィット', 'パンツ形状',
+            '胸ポケット', '腰ポケット', '衿型', '衿幅', 'カフス', 'オプション', '価格', '納期', 'アイテム備考',
+            '小計', '割引率(%)', '割引額', '総額', '支払方法', '内金', '残金', '全体備考', '受注日', '注文番号'
         ];
         
         // 複数アイテムを各行に展開するための配列
@@ -3456,7 +3463,7 @@ function saveToCSV() {
         // 各アイテムごとに行を作成
         formData.items.forEach((item, index) => {
             const values = [
-                '', // 顧客ID（後から手動入力用）
+                formData.orderNumber, // 顧客ID
                 formData.lastName,
                 formData.firstName,
                 formData.lastNameKana,
@@ -3468,8 +3475,6 @@ function saveToCSV() {
                 formData.prefecture,
                 formData.address,
                 formData.phone,
-                formData.email,
-                formData.lineId,
                 formData.referrer,
                 formData.measurements.height,
                 formData.measurements.weight,
@@ -3490,6 +3495,8 @@ function saveToCSV() {
                 formData.measurements.pantWaist,
                 formData.measurements.crotchDepth,
                 formData.measurements.inseam,
+                formData.measurements.pantTotalLength || '',
+                formData.measurements.inseamActual || '',
                 formData.measurements.thighCircum,
                 formData.measurements.kneeCircum,
                 formData.measurements.calfCircum,
@@ -3509,8 +3516,21 @@ function saveToCSV() {
                 item.jacketStyle === 'double_6x2' ? 'ダブル６×２' : 
                 item.jacketStyle === 'double_4x2' ? 'ダブル４×２' : 
                 item.jacketStyle === 'double_2x1' ? 'ダブル２×１' : item.jacketStyle || '',
+                item.liningType === 'senuki' ? '背抜き' :
+                item.liningType === 'soura' ? '総裏' : item.liningType || '',
                 item.lining || '',
                 item.buttons || '',
+                item.jacketFit === 'tight' ? 'タイトフィット' :
+                item.jacketFit === 'basic' ? 'ベーシックフィット' :
+                item.jacketFit === 'loose' ? 'ルーズフィット' : item.jacketFit || '',
+                item.pantsFit === 'tight' ? 'タイトフィット' :
+                item.pantsFit === 'basic' ? 'ベーシックフィット' :
+                item.pantsFit === 'loose' ? 'ルーズフィット' : item.pantsFit || '',
+                item.pantsShape === 'tapered' ? 'テーパード' :
+                item.pantsShape === 'straight' ? 'ストレート' :
+                item.pantsShape === 'wide' ? 'ワイド' :
+                item.pantsShape === 'slight_flare' ? '少しフレア' :
+                item.pantsShape === 'flare' ? 'フレア' : item.pantsShape || '',
                 // 胸ポケット
                 item.chestPocket === 'barca' ? 'バルカポケット' :
                 item.chestPocket === 'box' ? '箱ポケット' :
@@ -3523,10 +3543,10 @@ function saveToCSV() {
                 item.waistPocket === 'hacking' ? 'ハッキングポケット' :
                 item.waistPocket === 'hacking_change' ? 'ハッキングチェンジP' : item.waistPocket || '',
                 item.lapelStyle || '',
+                item.lapelWidth ? item.lapelWidth + 'cm' : '',
                 item.cuffStyle || '',
-                item.cuffDetails || '',
                 item.options ? item.options.join('、') : '', // オプションをカンマ区切りで結合
-                (item.price || 0) + (item.optionPrices || 0), // 基本価格 + オプション価格
+                item.price || '',
                 item.deliveryDate || '',
                 item.notes || '',
                 // 価格情報（全行で同じ）
@@ -3542,7 +3562,7 @@ function saveToCSV() {
                 formData.payment.balance,
                 formData.generalNotes,
                 formData.orderDate, // 現在の日付
-                formData.orderNumber // 注文ID（新形式）
+                formData.orderNumber // 注文番号
             ];
             
             rows.push(values);
@@ -3581,11 +3601,8 @@ function saveToCSV() {
                        String(now.getMonth() + 1).padStart(2, '0') + 
                        String(now.getDate()).padStart(2, '0');
         
-        const customerName = (formData.lastName + formData.firstName) || 'データ';
+        const customerName = formData.fullName || 'データ';
         const filename = `CRM顧客データ_${customerName}_${dateStr}.csv`;
-        
-        console.log('CSV保存 - 注文ID確認:', formData.orderNumber); // デバッグ用ログ
-        console.log('CSV保存 - ファイル名:', filename); // デバッグ用ログ
         
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -3663,11 +3680,10 @@ function setupAutoBackup() {
     }
     
     setInterval(() => {
-        const lastName = document.getElementById('lastName')?.value;
-        const firstName = document.getElementById('firstName')?.value;
+        const fullName = document.getElementById('fullName')?.value;
         
         // 名前が入力されている場合
-        if (lastName || firstName) {
+        if (fullName) {
             try {
                 if (currentCustomerId) {
                     // 既存顧客の場合は上書き保存
@@ -3699,13 +3715,24 @@ function loadDataToForm(data) {
             }
         }
         
-        if (data.lastName) document.getElementById('lastName').value = data.lastName;
-        if (data.firstName) document.getElementById('firstName').value = data.firstName;
-        if (data.lastNameKana) document.getElementById('lastNameKana').value = data.lastNameKana;
-        if (data.firstNameKana) document.getElementById('firstNameKana').value = data.firstNameKana;
+        // 統合名前フィールドへの読み込み（互換性対応）
+        if (data.fullName) {
+            document.getElementById('fullName').value = data.fullName;
+        } else if (data.lastName || data.firstName) {
+            // 旧データ形式の場合
+            document.getElementById('fullName').value = 
+                `${data.lastName || ''} ${data.firstName || ''}`.trim();
+        }
+        
+        if (data.fullNameKana) {
+            document.getElementById('fullNameKana').value = data.fullNameKana;
+        } else if (data.lastNameKana || data.firstNameKana) {
+            // 旧データ形式の場合
+            document.getElementById('fullNameKana').value = 
+                `${data.lastNameKana || ''} ${data.firstNameKana || ''}`.trim();
+        }
+        
         if (data.phone) document.getElementById('phone').value = data.phone;
-        if (data.email) document.getElementById('email').value = data.email;
-        if (data.lineId) document.getElementById('lineId').value = data.lineId;
         if (data.referrer) document.getElementById('referrer').value = data.referrer;
         if (data.gender) document.getElementById('gender').value = data.gender;
         if (data.occupation) document.getElementById('occupation').value = data.occupation;
@@ -3776,6 +3803,10 @@ function loadDataToForm(data) {
                         const jacketStyleElement = document.getElementById(`jacketStyle_${itemId}`);
                         if (jacketStyleElement) jacketStyleElement.value = item.jacketStyle;
                     }
+                    if (item.liningType) {
+                        const liningTypeElement = document.getElementById(`liningType_${itemId}`);
+                        if (liningTypeElement) liningTypeElement.value = item.liningType;
+                    }
                     if (item.lining) {
                         const liningElement = document.getElementById(`lining_${itemId}`);
                         if (liningElement) liningElement.value = item.lining;
@@ -3783,6 +3814,18 @@ function loadDataToForm(data) {
                     if (item.buttons) {
                         const buttonsElement = document.getElementById(`buttons_${itemId}`);
                         if (buttonsElement) buttonsElement.value = item.buttons;
+                    }
+                    if (item.jacketFit) {
+                        const jacketFitElement = document.getElementById(`jacketFit_${itemId}`);
+                        if (jacketFitElement) jacketFitElement.value = item.jacketFit;
+                    }
+                    if (item.pantsFit) {
+                        const pantsFitElement = document.getElementById(`pantsFit_${itemId}`);
+                        if (pantsFitElement) pantsFitElement.value = item.pantsFit;
+                    }
+                    if (item.pantsShape) {
+                        const pantsShapeElement = document.getElementById(`pantsShape_${itemId}`);
+                        if (pantsShapeElement) pantsShapeElement.value = item.pantsShape;
                     }
                     if (item.chestPocket) {
                         const chestPocketElement = document.getElementById(`chestPocket_${itemId}`);
@@ -3796,13 +3839,13 @@ function loadDataToForm(data) {
                         const lapelElement = document.getElementById(`lapelStyle_${itemId}`);
                         if (lapelElement) lapelElement.value = item.lapelStyle;
                     }
+                    if (item.lapelWidth) {
+                        const lapelWidthElement = document.getElementById(`lapelWidth_${itemId}`);
+                        if (lapelWidthElement) lapelWidthElement.value = item.lapelWidth;
+                    }
                     if (item.cuffStyle) {
                         const cuffElement = document.getElementById(`cuffStyle_${itemId}`);
                         if (cuffElement) cuffElement.value = item.cuffStyle;
-                    }
-                    if (item.cuffDetails) {
-                        const cuffDetailsElement = document.getElementById(`cuffDetails_${itemId}`);
-                        if (cuffDetailsElement) cuffDetailsElement.value = item.cuffDetails;
                     }
                     if (item.price) {
                         const priceElement = document.getElementById(`price_${itemId}`);
@@ -3952,12 +3995,52 @@ function addStyleItem() {
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="liningType_${itemId}">裏地仕様</label>
+                    <select id="liningType_${itemId}" name="liningType_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="senuki">背抜き</option>
+                        <option value="soura">総裏</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="lining_${itemId}">裏地</label>
                     <input type="text" id="lining_${itemId}" name="lining_${itemId}" placeholder="裏地の種類・色">
                 </div>
                 <div class="form-group">
                     <label for="buttons_${itemId}">ボタン</label>
                     <input type="text" id="buttons_${itemId}" name="buttons_${itemId}" placeholder="ボタンの種類・材質">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="jacketFit_${itemId}">ジャケットフィット</label>
+                    <select id="jacketFit_${itemId}" name="jacketFit_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="tight">タイトフィット</option>
+                        <option value="basic">ベーシックフィット</option>
+                        <option value="loose">ルーズフィット</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pantsFit_${itemId}">パンツフィット</label>
+                    <select id="pantsFit_${itemId}" name="pantsFit_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="tight">タイトフィット</option>
+                        <option value="basic">ベーシックフィット</option>
+                        <option value="loose">ルーズフィット</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pantsShape_${itemId}">パンツ形状</label>
+                    <select id="pantsShape_${itemId}" name="pantsShape_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="tapered">テーパード</option>
+                        <option value="straight">ストレート</option>
+                        <option value="wide">ワイド</option>
+                        <option value="slight_flare">少しフレア</option>
+                        <option value="flare">フレア</option>
+                    </select>
                 </div>
             </div>
             
@@ -4015,6 +4098,27 @@ function addStyleItem() {
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="lapelWidth_${itemId}">衿幅</label>
+                    <select id="lapelWidth_${itemId}" name="lapelWidth_${itemId}">
+                        <option value="">選択してください</option>
+                        <option value="5">5cm</option>
+                        <option value="5.5">5.5cm</option>
+                        <option value="6">6cm</option>
+                        <option value="6.5">6.5cm</option>
+                        <option value="7">7cm</option>
+                        <option value="7.5">7.5cm</option>
+                        <option value="8">8cm</option>
+                        <option value="8.5">8.5cm</option>
+                        <option value="9">9cm</option>
+                        <option value="9.5">9.5cm</option>
+                        <option value="10">10cm</option>
+                        <option value="10.5">10.5cm</option>
+                        <option value="11">11cm</option>
+                        <option value="11.5">11.5cm</option>
+                        <option value="12">12cm</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="cuffStyle_${itemId}">カフス（袖口）</label>
                     <select id="cuffStyle_${itemId}" name="cuffStyle_${itemId}">
                         <option value="">選択してください</option>
@@ -4038,10 +4142,6 @@ function addStyleItem() {
                             <option value="arrow">アロー</option>
                         </optgroup>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="cuffDetails_${itemId}">カフス詳細</label>
-                    <input type="text" id="cuffDetails_${itemId}" name="cuffDetails_${itemId}" placeholder="ボタンホール色、ステッチ等">
                 </div>
             </div>
             
@@ -4082,6 +4182,14 @@ function addStyleItem() {
                     <div class="checkbox-item">
                         <input type="checkbox" id="lining_c_${itemId}" name="options_${itemId}" data-price="17000" onchange="updateTotalPrice()">
                         <label for="lining_c_${itemId}">有料裏地C (¥17,000)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hiromikaeshi_${itemId}" name="options_${itemId}" data-price="3500" onchange="updateTotalPrice()">
+                        <label for="hiromikaeshi_${itemId}">広見返し (¥3,500)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="odaiba_${itemId}" name="options_${itemId}" data-price="2500" onchange="updateTotalPrice()">
+                        <label for="odaiba_${itemId}">お台場 (¥2,500)</label>
                     </div>
                     
                     <div style="width: 100%; margin: 10px 0;">
@@ -4369,10 +4477,9 @@ function updateBalance() {
 // 印刷プレビュー（改良版）
 function printPreview() {
     // 印刷前に必須項目をチェック
-    const lastName = document.getElementById('lastName')?.value.trim();
-    const firstName = document.getElementById('firstName')?.value.trim();
+    const fullName = document.getElementById('fullName')?.value.trim();
     
-    if (!lastName || !firstName) {
+    if (!fullName) {
         showStatusMessage('❌ お客様のお名前を入力してください', 'error');
         return;
     }
@@ -4382,8 +4489,7 @@ function printPreview() {
     const dateStr = now.getFullYear() + 
                    String(now.getMonth() + 1).padStart(2, '0') + 
                    String(now.getDate()).padStart(2, '0');
-    const customerName = lastName + firstName;
-    const suggestedFilename = `CRM顧客データ_${customerName}_${dateStr}.pdf`;
+    const suggestedFilename = `CRM顧客データ_${fullName}_${dateStr}.pdf`;
     
     // モーダルを表示
     showFilenameModal(suggestedFilename);
@@ -4656,9 +4762,9 @@ function preparePrintLayout(itemCount, isMobile) {
                 font-size: 5pt !important;
             }
             
-            /* 署名欄をより小さく */
-            .signature-box {
-                height: 25px !important;
+            /* 備考欄のサイズ調整 */
+            .notes-area {
+                height: 40px !important;
                 font-size: 6pt !important;
             }
         `;
@@ -4712,10 +4818,9 @@ window.addEventListener('offline', function() {
 });
 
 window.addEventListener('beforeunload', function(e) {
-    const lastName = document.getElementById('lastName')?.value;
-    const firstName = document.getElementById('firstName')?.value;
+    const fullName = document.getElementById('fullName')?.value;
     
-    if (lastName || firstName) {
+    if (fullName) {
         e.preventDefault();
         e.returnValue = '';
     }
@@ -4725,14 +4830,13 @@ window.addEventListener('beforeunload', function(e) {
 // デバッグとログ出力
 // =============================================================================
 
-console.log('=== CRMオーダーシステム V6 モバイル印刷対応版 ===');
+console.log('=== CRMオーダーシステム 改善版 ===');
 console.log('初期化完了時刻:', new Date().toISOString());
-console.log('利用可能機能:');
-console.log('- 自動バックアップ（5分ごと）');
-console.log('- PDF/CSV保存');
-console.log('- オフライン対応');
-console.log('- モバイル印刷最適化');
-console.log('- ページ分割機能');
+console.log('改善内容:');
+console.log('- 姓名統合');
+console.log('- 裏地オプション追加');
+console.log('- 新規フィールド追加');
+console.log('- UI簡素化');
 console.log('========================');
     </script>
 </body>
