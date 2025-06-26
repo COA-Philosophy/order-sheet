@@ -2600,15 +2600,22 @@ function saveToCSV() {
             
             // BE列：オプション（チェックされたものを連結）
             const options = [];
+            let optionsTotal = 0;
             const checkboxes = item.querySelectorAll('input[type="checkbox"]:checked');
             checkboxes.forEach(cb => {
                 const label = cb.nextElementSibling?.textContent || '';
                 options.push(label.trim());
+                const price = parseFloat(cb.getAttribute('data-price') || 0);
+                optionsTotal += price;
             });
             row.push(options.join('、'));
             
-            // BF-BH列：価格、納期、備考
-            row.push(document.getElementById(`price_${itemId}`)?.value || '');
+            // BF列：価格（基本価格＋オプション代金の合計）
+            const basePrice = parseFloat(document.getElementById(`price_${itemId}`)?.value || 0);
+            const totalPrice = basePrice + optionsTotal;
+            row.push(totalPrice);
+            
+            // BG-BH列：納期、備考
             row.push(document.getElementById(`deliveryDate_${itemId}`)?.value || '');
             row.push(document.getElementById(`notes_${itemId}`)?.value || '');
             
@@ -3976,6 +3983,14 @@ function createStyleItemHTML(itemId) {
                     <input type="checkbox" id="kurumi_button_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
                     <label for="kurumi_button_${itemId}">クルミ釦 (¥1,500)</label>
                 </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="special_design_${itemId}" name="options_${itemId}" data-price="13000" onchange="updateTotalPrice()">
+                    <label for="special_design_${itemId}">特殊デザイン (¥13,000)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="lapel_silk_${itemId}" name="options_${itemId}" data-price="8000" onchange="updateTotalPrice()">
+                    <label for="lapel_silk_${itemId}">ラペルシルク切り替え (¥8,000)</label>
+                </div>
                 
                 <div style="width: 100%; margin: 10px 0;">
                     <strong style="color: #2c3e50;">裏地オプション</strong>
@@ -4075,3 +4090,4 @@ function createStyleItemHTML(itemId) {
     </script>
 </body>
 </html>
+ 
