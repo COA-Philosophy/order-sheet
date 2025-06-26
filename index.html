@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>オーダーメイドスーツ　オーダーシート</title>
     
+    <!-- QRコードライブラリ -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    
     <style>
 /* =====================================
    CRMオーダーシート 改善版CSS
@@ -1179,7 +1182,11 @@ optgroup option {
     .check-mark,
     .save-btn,
     .item-count,
-    .postal-hint {
+    .postal-hint,
+    .qr-section,
+    .qr-scan-btn,
+    #qr-reader,
+    #qr-result {
         display: none !important;
     }
     
@@ -1490,6 +1497,285 @@ select {
 .modal-button.secondary:hover {
     background: #dee2e6;
 }
+
+/* =====================================
+   QRコード読み取り機能用スタイル
+   ===================================== */
+
+/* QRセクション全体 */
+.qr-section {
+    position: relative;
+    margin: 20px 0;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f0ff, #ffffff);
+    border-radius: 12px;
+    border: 2px solid #e1d5f1;
+    transition: all 0.3s ease;
+}
+
+.qr-section:hover {
+    border-color: #9c27b0;
+    box-shadow: 0 4px 20px rgba(156, 39, 176, 0.15);
+}
+
+/* QRスキャンボタン（改善版） */
+.qr-scan-btn {
+    background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-scan-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.qr-scan-btn:hover:before {
+    left: 100%;
+}
+
+.qr-scan-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(156, 39, 176, 0.4);
+    background: linear-gradient(135deg, #ab47bc, #8e24aa);
+}
+
+.qr-scan-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 15px rgba(156, 39, 176, 0.4);
+}
+
+/* QRスキャナーカメラビュー */
+#qr-reader {
+    margin: 20px auto;
+    max-width: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    background: #000;
+    position: relative;
+}
+
+#qr-reader:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* QR結果表示エリア */
+#qr-result {
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #e8f5e9, #ffffff);
+    border: 2px solid #4caf50;
+    border-radius: 12px;
+    max-width: 500px;
+    box-shadow: 0 3px 15px rgba(76, 175, 80, 0.2);
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.qr-result-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #2e7d32;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.qr-result-content {
+    text-align: left;
+    color: #424242;
+}
+
+.qr-result-item {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.qr-result-label {
+    font-weight: bold;
+    color: #616161;
+}
+
+.qr-result-value {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+/* カメラストップボタン */
+.qr-stop-btn {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.qr-stop-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+/* ロイヤリティプログラム情報表示 */
+.loyalty-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #fff3e0, #ffffff);
+    border: 2px solid #ff9800;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.loyalty-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* モバイル対応（QR機能） */
+@media (max-width: 768px) {
+    .qr-section {
+        padding: 15px;
+    }
+    
+    .qr-scan-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    #qr-reader {
+        max-width: 100%;
+    }
+}
+
+/* 割引自動適用時のアニメーション */
+.discount-applied {
+    animation: highlightDiscount 1s ease;
+}
+
+@keyframes highlightDiscount {
+    0%, 100% {
+        background: transparent;
+    }
+    50% {
+        background: rgba(156, 39, 176, 0.1);
+        transform: scale(1.02);
+    }
+}
+
+/* エラー表示用スタイル */
+.qr-error {
+    background: linear-gradient(135deg, #ffebee, #ffffff);
+    border: 2px solid #f44336;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px auto;
+    max-width: 500px;
+    font-weight: bold;
+}
+
+/* 紹介者セクション専用スタイル */
+.referrer-section {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.referrer-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.referrer-input-group .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ローディングアニメーション */
+.qr-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #9c27b0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
     </style>
 </head>
 <body>
@@ -1674,6 +1960,15 @@ select {
         <div class="section">
             <h2 class="section-title">📋 追加情報（任意）</h2>
             <div class="section-content">
+                <!-- QRセクション（紹介者欄の直前に配置） -->
+                <div class="qr-section" style="margin-bottom: 20px;">
+                    <button type="button" class="qr-scan-btn" onclick="QRLoyaltySystem.startScan()">
+                        📷 ロイヤリティQRをスキャン
+                    </button>
+                    <div id="qr-reader" style="display: none;"></div>
+                    <div id="qr-result" style="display: none;"></div>
+                </div>
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="referrer">ご紹介者様</label>
@@ -2368,8 +2663,8 @@ select {
 
     <script>
 // =====================================
-// CRMオーダーシート 改善版JavaScript
-// 修正箇所：注文番号形式とCSV出力
+// CRMオーダーシート QR機能統合版JavaScript
+// 修正箇所：注文番号形式とCSV出力 + QR機能追加
 // ===================================== 
 
 // 基本設定とグローバル変数
@@ -2378,6 +2673,360 @@ let itemCounter = 1;
 let nextItemId = 2;
 let currentCustomerId = null;
 let orderSequence = 1; // 連番管理用
+
+// =============================================================================
+// QRロイヤリティシステム - 完全独立モジュール
+// =============================================================================
+
+window.QRLoyaltySystem = {
+    VERSION: '1.0.0',
+    isInitialized: false,
+    scanner: null,
+    isScanning: false,
+    referralApplied: false,
+    
+    // 初期化
+    init: function() {
+        console.log('QRLoyaltySystem 初期化開始...');
+        
+        // 環境チェック
+        if (!this.checkEnvironment()) {
+            console.warn('QR機能は利用できない環境です');
+            this.hideQRFeature();
+            return false;
+        }
+        
+        // ライブラリチェック
+        if (typeof Html5Qrcode === 'undefined') {
+            console.error('Html5Qrcodeライブラリが読み込まれていません');
+            this.hideQRFeature();
+            return false;
+        }
+        
+        this.isInitialized = true;
+        console.log('QRLoyaltySystem 初期化完了');
+        return true;
+    },
+    
+    // 環境チェック
+    checkEnvironment: function() {
+        // HTTPS環境またはローカルホスト
+        return location.protocol === 'https:' || 
+               location.hostname === 'localhost' || 
+               location.hostname === '127.0.0.1';
+    },
+    
+    // QR機能を非表示
+    hideQRFeature: function() {
+        const qrSection = document.querySelector('.qr-section');
+        if (qrSection) {
+            qrSection.style.display = 'none';
+        }
+    },
+    
+    // スキャン開始
+    startScan: function() {
+        // 安全性チェック
+        if (!this.isInitialized && !this.init()) {
+            window.showStatusMessage('QR機能が利用できません', 'error');
+            return;
+        }
+        
+        if (this.isScanning) {
+            this.stopScan();
+            return;
+        }
+        
+        console.log('QRスキャン開始...');
+        
+        // UI表示
+        const reader = document.getElementById('qr-reader');
+        const button = document.querySelector('.qr-scan-btn');
+        
+        if (!reader || !button) {
+            console.error('QR UI要素が見つかりません');
+            return;
+        }
+        
+        reader.style.display = 'block';
+        button.innerHTML = '⏹️ スキャンを停止';
+        button.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+        
+        // Html5Qrcodeの設定
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+        
+        try {
+            this.scanner = new Html5Qrcode("qr-reader");
+            this.scanner.start(
+                { facingMode: "environment" },
+                config,
+                this.onScanSuccess.bind(this),
+                this.onScanError.bind(this)
+            ).then(() => {
+                this.isScanning = true;
+                window.showStatusMessage('📷 カメラ起動中...QRコードをスキャンしてください', 'info');
+            }).catch(err => {
+                console.error("カメラ起動エラー:", err);
+                window.showStatusMessage('❌ カメラの起動に失敗しました', 'error');
+                this.resetUI();
+            });
+        } catch (error) {
+            console.error('QRスキャナー初期化エラー:', error);
+            window.showStatusMessage('❌ QRスキャナーの初期化に失敗しました', 'error');
+            this.resetUI();
+        }
+    },
+    
+    // スキャン停止
+    stopScan: function() {
+        if (this.scanner && this.isScanning) {
+            this.scanner.stop().then(() => {
+                console.log('QRスキャン停止');
+                this.isScanning = false;
+                this.resetUI();
+            }).catch(err => {
+                console.error('スキャン停止エラー:', err);
+            });
+        }
+    },
+    
+    // スキャン成功時の処理
+    onScanSuccess: function(decodedText, decodedResult) {
+        console.log('QRコード読み取り成功:', decodedText);
+        
+        // スキャン停止
+        this.stopScan();
+        
+        // QRデータ処理
+        this.processQRData(decodedText);
+    },
+    
+    // スキャンエラー時の処理
+    onScanError: function(errorMessage) {
+        // エラーログは多すぎるので特定のエラーのみ
+        if (errorMessage.includes('NotAllowedError')) {
+            console.error('カメラアクセスが拒否されました');
+            window.showStatusMessage('❌ カメラへのアクセスが拒否されました', 'error');
+            this.stopScan();
+        }
+    },
+    
+    // QRデータ処理
+    processQRData: function(url) {
+        try {
+            const urlObj = new URL(url);
+            const params = new URLSearchParams(urlObj.search);
+            
+            console.log('QRデータ解析:', {
+                url: url,
+                params: Object.fromEntries(params)
+            });
+            
+            if (params.get('action') === 'referral' && params.get('ref')) {
+                this.handleReferral(params.get('ref'));
+            } else if (params.get('id')) {
+                this.handleCustomerCredit(params.get('id'));
+            } else {
+                window.showStatusMessage('❌ 無効なQRコードです', 'error');
+            }
+        } catch (error) {
+            console.error('QRデータ解析エラー:', error);
+            window.showStatusMessage('❌ QRコードの解析に失敗しました', 'error');
+        }
+    },
+    
+    // 紹介者処理
+    handleReferral: function(referrerId) {
+        console.log('紹介者処理:', referrerId);
+        
+        // 紹介者名マッピング（実際の実装では外部データベース参照）
+        const referrerNames = {
+            'tatsuya_m': '松田達也',
+            'yuki_s': '佐藤ゆき',
+            'kenji_t': '田中健二',
+            // 実際の実装ではAPIから取得
+        };
+        
+        const referrerName = referrerNames[referrerId] || `紹介者ID: ${referrerId}`;
+        
+        // 紹介者名を入力
+        const referrerField = document.getElementById('referrer');
+        if (referrerField) {
+            referrerField.value = referrerName;
+            referrerField.classList.add('valid');
+            
+            // アニメーション
+            referrerField.style.transition = 'all 0.5s ease';
+            referrerField.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                referrerField.style.transform = 'scale(1)';
+            }, 500);
+        }
+        
+        // 結果表示
+        this.showQRResult({
+            type: 'referral',
+            referrerName: referrerName,
+            referrerId: referrerId
+        });
+        
+        // 割引自動適用（70,000円以上の場合5,000円割引）
+        this.applyReferralDiscount();
+        
+        window.showStatusMessage('✅ 紹介者情報を登録しました', 'success');
+    },
+    
+    // 既存顧客クレジット処理
+    handleCustomerCredit: function(customerId) {
+        console.log('既存顧客処理:', customerId);
+        
+        // デモ用のクレジット情報（実際の実装ではAPIから取得）
+        const customerData = {
+            'tatsuya_m': {
+                name: '松田達也',
+                credit: 15000,
+                tier: 'ゴールド'
+            },
+            'yuki_s': {
+                name: '佐藤ゆき',
+                credit: 8000,
+                tier: 'シルバー'
+            }
+        };
+        
+        const customer = customerData[customerId] || {
+            name: customerId,
+            credit: 0,
+            tier: 'ブロンズ'
+        };
+        
+        // 結果表示
+        this.showQRResult({
+            type: 'credit',
+            customerName: customer.name,
+            credit: customer.credit,
+            tier: customer.tier
+        });
+        
+        window.showStatusMessage(`✅ ${customer.name}様のクレジット残高: ¥${customer.credit.toLocaleString()}`, 'success');
+    },
+    
+    // 紹介割引適用
+    applyReferralDiscount: function() {
+        // 現在の合計金額を取得
+        const grandTotalElement = document.getElementById('grandTotal');
+        if (!grandTotalElement) return;
+        
+        const grandTotalText = grandTotalElement.textContent || '¥0';
+        const grandTotal = parseFloat(grandTotalText.replace(/[¥,]/g, '')) || 0;
+        
+        // 70,000円以上の場合のみ5,000円割引
+        if (grandTotal >= 70000) {
+            const discountAmountField = document.getElementById('discountAmount');
+            if (discountAmountField && !this.referralApplied) {
+                discountAmountField.value = 5000;
+                
+                // 割引適用アニメーション
+                discountAmountField.classList.add('discount-applied');
+                setTimeout(() => {
+                    discountAmountField.classList.remove('discount-applied');
+                }, 1000);
+                
+                // 割引更新
+                window.updateDiscount('amount');
+                
+                this.referralApplied = true;
+                window.showStatusMessage('✅ 紹介割引（¥5,000）を適用しました', 'success');
+            }
+        } else {
+            window.showStatusMessage('ℹ️ 紹介割引は¥70,000以上のご購入で適用されます', 'info');
+        }
+    },
+    
+    // QR結果表示
+    showQRResult: function(data) {
+        const resultDiv = document.getElementById('qr-result');
+        if (!resultDiv) return;
+        
+        let resultHTML = '';
+        
+        if (data.type === 'referral') {
+            resultHTML = `
+                <div class="qr-result-header">
+                    <span>✅</span>
+                    <span>紹介者情報を確認しました</span>
+                </div>
+                <div class="qr-result-content">
+                    <div class="qr-result-item">
+                        <span class="qr-result-label">紹介者様</span>
+                        <span class="qr-result-value">${data.referrerName}</span>
+                    </div>
+                    <div class="qr-result-item">
+                        <span class="qr-result-label">特典</span>
+                        <span class="qr-result-value">
+                            ¥5,000割引
+                            <span class="loyalty-badge">紹介特典</span>
+                        </span>
+                    </div>
+                    <div class="loyalty-info">
+                        ※ ¥70,000以上のご購入で自動適用されます
+                    </div>
+                </div>
+            `;
+        } else if (data.type === 'credit') {
+            resultHTML = `
+                <div class="qr-result-header">
+                    <span>💳</span>
+                    <span>会員情報を確認しました</span>
+                </div>
+                <div class="qr-result-content">
+                    <div class="qr-result-item">
+                        <span class="qr-result-label">お客様名</span>
+                        <span class="qr-result-value">${data.customerName}</span>
+                    </div>
+                    <div class="qr-result-item">
+                        <span class="qr-result-label">クレジット残高</span>
+                        <span class="qr-result-value">¥${data.credit.toLocaleString()}</span>
+                    </div>
+                    <div class="qr-result-item">
+                        <span class="qr-result-label">会員ランク</span>
+                        <span class="qr-result-value">
+                            ${data.tier}
+                            <span class="loyalty-badge">${data.tier}会員</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        resultDiv.innerHTML = resultHTML;
+        resultDiv.style.display = 'block';
+        
+        // 10秒後に自動的に非表示
+        setTimeout(() => {
+            resultDiv.style.display = 'none';
+        }, 10000);
+    },
+    
+    // UI リセット
+    resetUI: function() {
+        const reader = document.getElementById('qr-reader');
+        const button = document.querySelector('.qr-scan-btn');
+        
+        if (reader) {
+            reader.style.display = 'none';
+        }
+        
+        if (button) {
+            button.innerHTML = '📷 ロイヤリティQRをスキャン';
+            button.style.background = 'linear-gradient(135deg, #9c27b0, #7b1fa2)';
+        }
+    }
+};
 
 // =============================================================================
 // システム初期化
@@ -2420,6 +3069,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 顧客リストの初期化
     loadCustomerList();
+    
+    // QRロイヤリティシステムの初期化
+    try {
+        window.QRLoyaltySystem.init();
+    } catch (error) {
+        console.error('QRシステム初期化エラー:', error);
+    }
     
     // 自動バックアップ開始（localStorage利用可能な場合のみ）
     if (typeof(Storage) !== "undefined" && !isInSandbox()) {
@@ -2486,6 +3142,9 @@ function showStatusMessage(message, type = 'info') {
         alert(`${type.toUpperCase()}: ${message}`);
     }
 }
+
+// グローバルに公開
+window.showStatusMessage = showStatusMessage;
 
 // =============================================================================
 // フリガナ自動生成機能
@@ -3231,6 +3890,11 @@ function updateTotalPrice() {
     
     // 割引計算
     updateDiscount();
+    
+    // QRシステムで自動割引が適用されている場合の再チェック
+    if (window.QRLoyaltySystem && window.QRLoyaltySystem.referralApplied) {
+        window.QRLoyaltySystem.applyReferralDiscount();
+    }
 }
 
 function updateDiscount(source) {
@@ -3276,6 +3940,9 @@ function updateDiscount(source) {
     // 内金と残金の更新
     updateBalance();
 }
+
+// グローバルに公開
+window.updateDiscount = updateDiscount;
 
 function updateBalance() {
     const finalTotalText = document.getElementById('finalTotal')?.textContent || '¥0';
@@ -3654,6 +4321,11 @@ function clearForm() {
     nextItemId = 2;
     currentCustomerId = null;
     
+    // QRシステムのリセット
+    if (window.QRLoyaltySystem) {
+        window.QRLoyaltySystem.referralApplied = false;
+    }
+    
     // 新しい注文番号を生成
     incrementOrderSequence();
     const newOrderNo = generateOrderNumber();
@@ -3983,14 +4655,6 @@ function createStyleItemHTML(itemId) {
                     <input type="checkbox" id="kurumi_button_${itemId}" name="options_${itemId}" data-price="1500" onchange="updateTotalPrice()">
                     <label for="kurumi_button_${itemId}">クルミ釦 (¥1,500)</label>
                 </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="special_design_${itemId}" name="options_${itemId}" data-price="13000" onchange="updateTotalPrice()">
-                    <label for="special_design_${itemId}">特殊デザイン (¥13,000)</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="lapel_silk_${itemId}" name="options_${itemId}" data-price="8000" onchange="updateTotalPrice()">
-                    <label for="lapel_silk_${itemId}">ラペルシルク切り替え (¥8,000)</label>
-                </div>
                 
                 <div style="width: 100%; margin: 10px 0;">
                     <strong style="color: #2c3e50;">裏地オプション</strong>
@@ -4090,4 +4754,3 @@ function createStyleItemHTML(itemId) {
     </script>
 </body>
 </html>
- 
