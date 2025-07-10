@@ -2818,20 +2818,46 @@ window.QRLoyaltySystem = {
     // QRデータ処理
     processQRData: function(url) {
         try {
-            const urlObj = new URL(url);
-            const params = new URLSearchParams(urlObj.search);
+            console.log('読み取ったURL:', url);
             
-            console.log('QRデータ解析:', {
-                url: url,
-                params: Object.fromEntries(params)
+            // URLから直接パラメータを解析（複数の形式に対応）
+            let referrerId = null;
+            let isReferral = false;
+            let customerId = null;
+            
+            // パターン1: ?ref=XXX&action=referral
+            if (url.includes('ref=') && url.includes('action=referral')) {
+                const refMatch = url.match(/ref=([^&]+)/);
+                if (refMatch) {
+                    referrerId = refMatch[1];
+                    isReferral = true;
+                }
+            }
+            // パターン2: ?id=XXX (顧客QR)
+            else if (url.includes('id=') && !url.includes('action=referral')) {
+                const idMatch = url.match(/id=([^&]+)/);
+                if (idMatch) {
+                    customerId = idMatch[1];
+                }
+            }
+            // パターン3: シンプルなID形式（murakami-001のような形式）
+            else if (!url.includes('http')) {
+                // URLではなく直接IDが来た場合
+                customerId = url;
+            }
+            
+            console.log('解析結果:', {
+                isReferral: isReferral,
+                referrerId: referrerId,
+                customerId: customerId
             });
             
-            if (params.get('action') === 'referral' && params.get('ref')) {
-                this.handleReferral(params.get('ref'));
-            } else if (params.get('id')) {
-                this.handleCustomerCredit(params.get('id'));
+            if (isReferral && referrerId) {
+                this.handleReferral(referrerId);
+            } else if (customerId) {
+                this.handleCustomerCredit(customerId);
             } else {
-                window.showStatusMessage('❌ 無効なQRコードです', 'error');
+                window.showStatusMessage('❌ QRコードの形式が認識できません', 'error');
             }
         } catch (error) {
             console.error('QRデータ解析エラー:', error);
@@ -2848,6 +2874,8 @@ window.QRLoyaltySystem = {
             'tatsuya_m': '松田達也',
             'yuki_s': '佐藤ゆき',
             'kenji_t': '田中健二',
+            'murakami-001': '村上様',  // 追加
+            'murakami_001': '村上様',  // 別形式も対応
             // 実際の実装ではAPIから取得
         };
         
@@ -2895,6 +2923,16 @@ window.QRLoyaltySystem = {
                 name: '佐藤ゆき',
                 credit: 8000,
                 tier: 'シルバー'
+            },
+            'murakami-001': {
+                name: '村上様',
+                credit: 0,
+                tier: 'ブロンズ'
+            },
+            'murakami_001': {
+                name: '村上様',
+                credit: 0,
+                tier: 'ブロンズ'
             }
         };
         
